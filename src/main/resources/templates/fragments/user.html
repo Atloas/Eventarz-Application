@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="userShort" class="userShort">
+    <div class="userLabel" th:text="#{messages.user.label}"></div>
+    <div class="usernameDiv">
+        <a class="username" th:href="@{/admin/user(uuid = ${user.uuid})}" th:text="${user.username}"></a>
+    </div>
+</div>
+
+<div th:fragment="user" class="user">
+    <div class="userLabel" th:text="#{messages.user.label}"></div>
+    <div class="username" th:text="${user.username}"></div>
+    <div class="userRegisterDateDiv">
+        <div class="userRegisterDateLabel" th:text="#{messages.user.registerDate}"></div>
+        <div class="userRegisterDate" th:text="${user.registerDate}"></div>
+    </div>
+    <div class="userButtonsDiv" th:if="${!user.roles.contains('ADMIN')}">
+        <form action="#" th:action="@{/admin/deleteUser}" method="POST" id="adminDeleteUserForm">
+            <input type="hidden" th:value="${user.uuid}" name="uuid"/>
+            <input type="submit" class="buttonDanger" th:value="#{messages.admin.deleteUserButton}"/>
+        </form>
+    </div>
+    <div th:if="${user.foundedGroups}" class="userFoundedGroupsDiv">
+        <div class="userFoundedGroupsLabel" th:text="#{messages.user.foundedGroups}"></div>
+        <th:block th:each="group: ${user.foundedGroups}">
+            <div th:replace="~{fragments/group :: groupShort}"></div>
+        </th:block>
+    </div>
+    <div th:unless="${user.foundedGroups}" class="userFoundedGroupsDiv">
+        <div class="userFoundedGroupsLabel" th:text="#{messages.user.noFoundedGroups}"></div>
+    </div>
+    <div th:if="${user.groups}" class="userJoinedGroupsDiv">
+        <div class="userJoinedGroupsLabel" th:text="#{messages.user.joinedGroups}"></div>
+        <th:block th:each="group: ${user.groups}">
+            <div th:replace="~{fragments/group :: groupShort}"></div>
+        </th:block>
+    </div>
+    <div th:unless="${user.groups}" class="userJoinedGroupsDiv">
+        <div class="userJoinedGroupsLabel" th:text="#{messages.user.noJoinedGroups}"></div>
+    </div>
+    <div th:if="${user.organizedEvents}" class="userOrganizedEventsDiv">
+        <div class="userOrganizedEventsLabel" th:text="#{messages.user.organizedEvents}"></div>
+        <th:block th:each="event: ${user.organizedEvents}">
+            <div th:replace="~{fragments/event :: eventShort}"></div>
+        </th:block>
+    </div>
+    <div th:unless="${user.organizedEvents}" class="userOrganizedEventsDiv">
+        <div class="userOrganizedEventsLabel" th:text="#{messages.user.noOrganizedEvents}"></div>
+    </div>
+    <div th:if="${user.events}" class="userJoinedEventsDiv">
+        <div class="userJoinedEventsLabel" th:text="#{messages.user.joinedEvents}"></div>
+        <th:block th:each="event: ${user.events}">
+            <div th:replace="~{fragments/event :: eventShort}"></div>
+        </th:block>
+    </div>
+    <div th:unless="${user.events}" class="userJoinedEventsDiv">
+        <div class="userJoinedEventsLabel" th:text="#{messages.user.noJoinedEvents}"></div>
+    </div>
+</div>
+
+</body>
+
+</html>

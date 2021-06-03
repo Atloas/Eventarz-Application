@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/message :: messageBox}"></div>
+
+<div class="content">
+    <div class="homeWelcomeDiv">
+        <div class="homeWelcomeText" th:text="#{messages.homeWelcome}"></div>
+        <div class="homeWelcomeUsername" th:text="${username}+'!'"></div>
+    </div>
+    <div sec:authorize="hasAuthority('USER')" class="homeUpcomingDiv">
+        <th:block th:if="${!upcomingEvents.isEmpty()}">
+            <div class="homeUpcomingText" th:text="#{messages.upcoming}"></div>
+            <div th:each="event: ${upcomingEvents}">
+                <div th:replace="~{fragments/event :: eventShort}">EVENTS</div>
+            </div>
+        </th:block>
+        <div th:unless="${!upcomingEvents.isEmpty()}">
+            <div class="homeNoUpcomingText" th:text="#{messages.noUpcomingEvents}">NO EVENTS</div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

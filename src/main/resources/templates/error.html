@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/message :: messageBox}"></div>
+
+<div class="content">
+    <div class="errorHeaderDiv">
+        <div class="errorHeaderText" th:text="#{messages.errorHeader}"></div>
+    </div>
+    <div class="errorContentsDiv">
+        <div class="errorContentsText" th:text="${status + ': ' + error}"></div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

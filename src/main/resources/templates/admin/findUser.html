@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/head :: head}"></div>
+</head>
+
+<body>
+
+<script th:src="@{/js/findUser.js}"></script>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/message :: messageBox}"></div>
+
+<div class="content">
+    <div class="pageHeader" id="findUserHeader" th:text="#{messages.findUserHeader}"></div>
+    <form action="#" th:action="@{/admin/findUser}" method="GET" class="searchForm" id="findUserForm">
+        <div class="searchNamePromptDiv">
+            <label th:text="#{messages.user.search.usernamePrompt}" id="userSearchUsernamePrompt" for="userSearchUsernameField">NAME</label>
+        </div>
+        <div class="searchNameFieldDiv">
+            <input type="text" name="username" id="userSearchUsernameField"/>
+        </div>
+        <div class="searchNameRulesDiv">
+            <div class="searchNameRules rules"
+                 th:text="#{messages.user.search.usernameRules}"></div>
+        </div>
+        <div class="searchSubmitButtonDiv">
+            <input type="submit" class="buttonNormal" th:value="#{messages.button.search}" id="submitButton" disabled/>
+        </div>
+    </form>
+    <th:block th:if="${searched}">
+        <th:block th:if="${foundUsers.size() != 0}">
+            <div th:each="user: ${foundUsers}">
+                <div th:replace="~{fragments/user :: userShort}"></div>
+            </div>
+        </th:block>
+        <th:block th:unless="${foundUsers.size() != 0}">
+            <div th:text="#{messages.user.search.noUsersFound}"></div>
+        </th:block>
+    </th:block>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}">
+
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/message :: messageBox}"></div>
+
+<div class="content">
+    <div id="loginPrompt" th:text="#{messages.loginPrompt}"></div>
+    <form name="loginForm" th:action="@{/login}" method="post" id="loginForm">
+        <div id="loginUsernamePromptDiv">
+            <label th:text="#{messages.usernamePrompt}" for="loginUsernameField">Username</label>
+        </div>
+        <div id="loginUsernameFieldDiv">
+            <input type="text" id="loginUsernameField" name="username"/>
+        </div>
+        <div id="loginPasswordPromptDiv">
+            <label th:text="#{messages.passwordPrompt}" for="loginPasswordField">Password</label>
+        </div>
+        <div id="loginPasswordFieldDiv">
+            <input type="password" id="loginPasswordField" name="password"/>
+        </div>
+        <div id="loginSubmitButtonDiv">
+            <button type="submit" class="buttonNormal" id="loginSubmitButton" th:text="#{messages.button.login}">Login
+            </button>
+        </div>
+    </form>
+    <div id="registerLinkDiv">
+        <a id="registerLink" th:href="@{/registration}" th:text="#{messages.register}"></a>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

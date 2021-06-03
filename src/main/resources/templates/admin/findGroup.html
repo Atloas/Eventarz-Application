@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/head :: head}"></div>
+</head>
+
+<body>
+
+<script th:src="@{/js/findGroup.js}"></script>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/message :: messageBox}"></div>
+
+<div class="content">
+    <div class="pageHeader" id="findGroupHeader" th:text="#{messages.findGroupHeader}"></div>
+    <form action="#" th:action="@{/admin/findGroup}" method="GET" class="searchForm" id="findGroupForm">
+        <div class="searchNamePromptDiv">
+            <label th:text="#{messages.group.search.namePrompt}" id="groupSearchNamePrompt" for="groupSearchNameField">NAME</label>
+        </div>
+        <div class="searchNameFieldDiv">
+            <input type="text" name="name" id="groupSearchNameField"/>
+        </div>
+        <div class="searchNameRulesDiv">
+            <div class="searchNameRules rules"
+                 th:text="#{messages.group.search.nameRules}"></div>
+        </div>
+        <div class="searchSubmitButtonDiv">
+            <input type="submit" class="buttonNormal" th:value="#{messages.button.search}" id="submitButton" disabled/>
+        </div>
+    </form>
+    <th:block th:if="${searched}">
+        <th:block th:if="${foundGroups.size() != 0}">
+            <div th:each="group: ${foundGroups}">
+                <div th:replace="~{fragments/group :: groupShort}"></div>
+            </div>
+        </th:block>
+        <th:block th:unless="${foundGroups.size() != 0}">
+            <div th:text="#{messages.group.search.noGroupsFound}"></div>
+        </th:block>
+    </th:block>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

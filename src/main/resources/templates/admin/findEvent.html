@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/head :: head}"></div>
+</head>
+
+<body>
+
+<script th:src="@{/js/findEvent.js}"></script>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/message :: messageBox}"></div>
+
+<div class="content">
+    <div class="pageHeader" id="findEventHeader" th:text="#{messages.findEventHeader}"></div>
+    <form action="#" th:action="@{/admin/findEvent}" method="GET" class="searchForm" id="findEventForm">
+        <div class="searchNamePromptDiv">
+            <label th:text="#{messages.event.search.namePrompt}" id="eventSearchNamePrompt" for="eventSearchNameField">NAME</label>
+        </div>
+        <div class="searchNameFieldDiv">
+            <input type="text" name="name" id="eventSearchNameField"/>
+        </div>
+        <div class="searchNameRulesDiv">
+            <div class="searchNameRules rules"
+                 th:text="#{messages.event.search.nameRules}"></div>
+        </div>
+        <div class="searchSubmitButtonDiv">
+            <input type="submit" class="buttonNormal" th:value="#{messages.button.search}" id="submitButton" disabled/>
+        </div>
+    </form>
+    <th:block th:if="${searched}">
+        <th:block th:if="${foundEvents.size() != 0}">
+            <div th:each="event: ${foundEvents}">
+                <div th:replace="~{fragments/event :: eventShort}"></div>
+            </div>
+        </th:block>
+        <th:block th:unless="${foundEvents.size() != 0}">
+            <div th:text="#{messages.event.search.noEventsFound}"></div>
+        </th:block>
+    </th:block>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

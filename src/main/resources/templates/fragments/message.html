@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="messageError(messageText)" class="messageError">
+    <div class="messageErrorText" th:text="${messageText}">TEXT</div>
+    <button class="buttonNormal" th:text="#{messages.button.OK}" onclick="this.parentNode.style.display = 'none';">BUTTON</button>
+</div>
+
+<div th:fragment="messageInfo(messageText)" class="messageInfo">
+    <div class="messageInfoText" th:text="${messageText}">TEXT</div>
+    <button class="buttonNormal" th:text="#{messages.button.OK}" onclick="this.parentNode.style.display = 'none';">BUTTON</button>
+</div>
+
+<div th:fragment="messageBox" id="messageBox">
+    <th:block th:if="${errorLogin}">
+        <div th:replace="~{this :: messageError(#{messages.error.login})}"></div>
+    </th:block>
+    <th:block th:if="${errorDb}">
+        <div th:replace="~{this :: messageError(#{messages.error.db})}"></div>
+    </th:block>
+    <th:block th:if="${errorUserExists}">
+        <div th:replace="~{this :: messageError(#{messages.error.userExists})}"></div>
+    </th:block>
+    <th:block th:if="${errorEventFull}">
+        <div th:replace="~{this :: messageError(#{messages.error.eventFull})}"></div>
+    </th:block>
+    <th:block th:if="${errorIllegalUsername}">
+        <div th:replace="~{this :: messageError(#{messages.error.illegalUsername})}"></div>
+    </th:block>
+    <th:block th:if="${errorIllegalPassword}">
+        <div th:replace="~{this :: messageError(#{messages.error.illegalPassword})}"></div>
+    </th:block>
+    <th:block th:if="${errorPasswordNotRepeated}">
+        <div th:replace="~{this :: messageError(#{messages.error.passwordNotRepeated})}"></div>
+    </th:block>
+    <th:block th:if="${errorEventInvalid}">
+        <div th:replace="~{this :: messageError(#{messages.error.eventInvalid})}"></div>
+    </th:block>
+    <th:block th:if="${errorUserInvalid}">
+        <div th:replace="~{this :: messageError(#{messages.error.userInvalid})}"></div>
+    </th:block>
+    <th:block th:if="${errorGroupInvalid}">
+        <div th:replace="~{this :: messageError(#{messages.error.groupInvalid})}"></div>
+    </th:block>
+
+
+
+    <th:block th:if="${infoRegistered}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.registered})}"></div>
+    </th:block>
+    <th:block th:if="${infoLogout}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.logout})}"></div>
+    </th:block>
+    <th:block th:if="${infoGroupCreated}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.groupCreated})}"></div>
+    </th:block>
+    <th:block th:if="${infoGroupJoined}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.groupJoined})}"></div>
+    </th:block>
+    <th:block th:if="${infoGroupLeft}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.groupLeft})}"></div>
+    </th:block>
+    <th:block th:if="${infoGroupDeleted}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.groupDeleted})}"></div>
+    </th:block>
+    <th:block th:if="${infoEventCreated}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.eventCreated})}"></div>
+    </th:block>
+    <th:block th:if="${infoEventJoined}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.eventJoined})}"></div>
+    </th:block>
+    <th:block th:if="${infoEventLeft}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.eventLeft})}"></div>
+    </th:block>
+    <th:block th:if="${infoEventDeleted}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.eventDeleted})}"></div>
+    </th:block>
+    <th:block th:if="${infoUserDeleted}">
+        <div th:replace="~{this :: messageInfo(#{messages.info.userDeleted})}"></div>
+    </th:block>
+</div>
+
+
+</body>
+
+</html>

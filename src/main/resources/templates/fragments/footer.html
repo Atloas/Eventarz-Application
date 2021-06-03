@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="footer" id="footer">
+    <script th:src="@{/js/footer.js}"></script>
+
+    <div class="localeChangeDiv">
+        <select id="locales">
+            <option value="" th:text="#{messages.localePrompt}"></option>
+            <option value="en" th:text="#{messages.english}"></option>
+            <option value="pl" th:text="#{messages.polish}"></option>
+        </select>
+    </div>
+    <div class="credits" th:text="#{messages.credits}"></div>
+</div>
+
+</body>
+
+</html>

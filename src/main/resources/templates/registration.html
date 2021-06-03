@@ -1,0 +1,59 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head th:replace="~{fragments/head :: head}">
+</head>
+
+<body>
+
+    <script th:src="@{/js/registration.js}"></script>
+
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/message :: messageBox}"></div>
+
+    <div class="content">
+        <div id="registerPrompt" th:text="#{messages.registerPrompt}"></div>
+        <form action="#" th:action="@{/registration}" th:object="${userForm}" th:method="POST" id="registrationForm">
+            <div id="registrationUsernamePromptDiv">
+                <label th:text="#{messages.usernamePrompt}" id="registrationUsernamePrompt"
+                    for="registrationUsernameField">email</label>
+            </div>
+            <div id="registrationUsernameFieldDiv">
+                <input type="text" th:field="*{username}" id="registrationUsernameField" name="username" />
+            </div>
+            <div id="registrationUsernameRulesDiv">
+                <div id="registrationUsernameRules" class="rules" th:text="#{messages.usernameRules}"></div>
+            </div>
+            <div id="registrationPasswordPromptDiv">
+                <label th:text="#{messages.passwordPrompt}" id="registrationPasswordPrompt"
+                    for="registrationPasswordField">password</label>
+            </div>
+            <div id="registrationPasswordFieldDiv">
+                <input type="password" th:field="*{password}" id="registrationPasswordField" name="password" />
+            </div>
+            <div id="registrationPasswordRulesDiv">
+                <div id="registrationPasswordRules" class="rules" th:text="#{messages.passwordRules}"></div>
+            </div>
+            <div id="registrationRepeatPasswordPromptDiv">
+                <label th:text="#{messages.repeatPasswordPrompt}" id="registrationRepeatPasswordPrompt"
+                    for="registrationRepeatPasswordField">password</label>
+            </div>
+            <div id="registrationRepeatPasswordFieldDiv">
+                <input type="password" th:field="*{repeatPassword}" id="registrationRepeatPasswordField"
+                    name="repeatPassword" />
+            </div>
+            <div id="registrationSubmitButtonDiv">
+                <button type="submit" class="buttonNormal" id="registrationSubmitButton"
+                    th:text="#{messages.button.registrationSubmit}" disabled>Submit
+                </button>
+            </div>
+        </form>
+        <div id="loginLinkDiv">
+            <a class="loginLink" th:href="@{/login}" th:text="#{messages.login}"></a>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}">
+</head>
+
+<body>
+
+<script th:src="@{/js/createEvent.js}"></script>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/message :: messageBox}"></div>
+
+<div class="content">
+    <div class="pageHeader" id="createEventHeader" th:text="#{messages.createEventHeader}"></div>
+    <div th:if="${noGroups}">
+        <div th:text="#{messages.joinGroupToCreateEvent}"></div>
+    </div>
+    <div th:unless="${noGroups}">
+        <form action="#" th:action="@{/createEvent}" th:object="${eventForm}" method="POST" id="createEventForm">
+            <div id="eventCreateGroupSelectPromptDiv">
+                <label th:text="#{messages.event.create.groupPrompt}" id="eventCreateGroupSelectPrompt"
+                       for="eventCreateGroupSelectField">GROUP</label>
+            </div>
+            <div id="eventCreateGroupSelectFieldDiv">
+                <select th:field="*{groupUuid}" id="eventCreateGroupSelectField">
+                    <th:block th:each="group: ${myGroups}">
+                        <option th:value="${group.uuid}" th:text="${group.name}">GROUP</option>
+                    </th:block>
+                </select>
+            </div>
+            <div id="eventCreateNamePromptDiv">
+                <label th:text="#{messages.event.create.namePrompt}" id="eventCreateNamePrompt"
+                       for="eventCreateNameField">NAME</label>
+            </div>
+            <div id="eventCreateNameFieldDiv">
+                <input type="text" th:field="*{name}" name="name" id="eventCreateNameField"/>
+            </div>
+            <div id="eventCreateNameRulesDiv">
+                <div id="eventCreateNameRules" class="rules" th:text="#{messages.event.create.nameRules}"></div>
+            </div>
+            <div id="eventCreateDescriptionPromptDiv">
+                <label th:text="#{messages.event.create.descriptionPrompt}" id="eventCreateDescriptionPrompt"
+                       for="eventCreateDescriptionField">DESCRIPTION</label>
+            </div>
+            <div id="eventCreateDescriptionFieldDiv">
+                <textarea th:field="*{description}" name="description" id="eventCreateDescriptionField" cols="50"
+                          rows="5">
+                </textarea>
+            </div>
+            <div id="eventCreateDescriptionRulesDiv">
+                <div id="eventCreateDescriptionRules" class="rules" th:text="#{messages.event.create.descriptionRules}"></div>
+            </div>
+            <div id="eventCreateMaxParticipantsPromptDiv">
+                <label th:text="#{messages.event.create.maxParticipantsPrompt}" id="eventCreateMaxParticipantsPrompt"
+                       for="eventCreateMaxParticipantsField">MAX
+                    PARTICIPANTS</label>
+            </div>
+            <div id="eventCreateMaxParticipantsFieldDiv">
+                <input type="number" min="1" value="1" th:field="*{maxParticipants}"
+                       name="maxParticipants" id="eventCreateMaxParticipantsField"/>
+            </div>
+            <div id="eventCreateEventDatePromptDiv">
+                <label th:text="#{messages.event.create.eventDatePrompt}" id="eventCreateEventDatePrompt" for="eventCreateEventDateField">DATE</label>
+            </div>
+            <div id="eventCreateEventDateFieldDiv">
+                <input type="datetime-local" th:field="*{eventDate}" name="eventDate" id="eventCreateEventDateField"/>
+            </div>
+            <div id="eventCreateParticipateDiv">
+                <label th:text="#{messages.event.create.participate}" for="eventCreateParticipateField">JOIN</label>
+                <input type="checkbox" value="participate" th:field="*{participate}"
+                       id="eventCreateParticipateField">
+            </div>
+            <div id="createEventSubmitButtonDiv">
+                <input type="submit" class="buttonNormal" th:value="#{messages.event.create.createButton}"
+                       id="createEventSubmitButton"
+                       disabled/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

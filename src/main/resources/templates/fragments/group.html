@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="groupShort" class="groupShort">
+    <div class="groupLabel" th:text="#{messages.group.label}"></div>
+    <div class="groupNameDiv">
+        <a class="groupName" th:href="@{/group(uuid = ${group.uuid})}" th:text="${group.name}"></a>
+    </div>
+    <div class="groupDescription" th:text="${group.description}"></div>
+    <div class="groupFoundingDiv">
+        <div class="groupFounderLabel" th:text="#{messages.group.founder}"></div>
+        <th:block th:if="${group.founder}">
+            <div class="groupFounder" th:text="${group.founder.username}"></div>
+        </th:block>
+        <th:block th:unless="${group.founder}">
+            <div class="groupFounderName deletedUser" th:text="#{messages.user.deleted}"></div>
+        </th:block>
+        <div class="groupFoundingDateLabel" th:text="#{messages.group.foundingDay}"></div>
+        <div class="groupFoundingDate" th:text="${group.createdDate}"></div>
+    </div>
+    <div th:if="${group.members}" class="groupMemberCountDiv">
+        <div class="groupMemberCountLabel" th:text="#{messages.group.members}"></div>
+        <div class="groupMemberCount" th:text="${group.members.size()}"></div>
+    </div>
+    <div th:unless="${group.members}" class="groupMemberCountDiv">
+        <div class="groupMemberCountLabel" th:text="#{messages.group.noMembers}"></div>
+    </div>
+</div>
+
+<div th:fragment="group" class="group">
+    <div class="groupLabel" th:text="#{messages.group.label}"></div>
+    <div class="groupName" th:text="${group.name}"></div>
+    <div class="groupDescription" th:text="${group.description}"></div>
+    <div class="groupFoundingDiv">
+        <div class="groupFounderLabel" th:text="#{messages.group.founder}"></div>
+        <th:block th:if="${group.founder}">
+            <div class="groupFounder" th:text="${group.founder.username}"></div>
+        </th:block>
+        <th:block th:unless="${group.founder}">
+            <div class="groupFounder deletedUser" th:text="#{messages.user.deleted}"></div>
+        </th:block>
+        <div class="groupFoundingDateLabel" th:text="#{messages.group.foundingDay}"></div>
+        <div class="groupFoundingDate" th:text="${group.createdDate}"></div>
+    </div>
+    <div class="groupButtonsDiv">
+        <th:block class="groupButtons" sec:authorize="hasAuthority('USER')">
+            <th:block th:if="${joined}">
+                <form action="#" th:action="@{/leaveGroup}" method="POST" id="leaveGroupForm">
+                    <input type="hidden" th:value="${group.uuid}" name="uuid"/>
+                    <input type="submit" class="buttonNormal" th:value="#{messages.group.leaveButton}"/>
+                </form>
+            </th:block>
+            <th:block th:unless="${joined}">
+                <form action="#" th:action="@{/joinGroup}" method="POST" id="joinGroupForm">
+                    <input type="hidden" th:value="${group.uuid}" name="uuid"/>
+                    <input type="submit" class="buttonNormal" th:value="#{messages.group.joinButton}"/>
+                </form>
+            </th:block>
+            <th:block th:if="${founded}">
+                <form action="#" th:action="@{/deleteGroup}" method="POST" id="deleteGroupForm">
+                    <input type="hidden" th:value="${group.uuid}" name="uuid"/>
+                    <input type="submit" class="buttonDanger" th:value="#{messages.group.deleteButton}"/>
+                </form>
+            </th:block>
+        </th:block>
+        <th:block sec:authorize="hasAuthority('ADMIN')">
+            <form action="#" th:action="@{/admin/deleteGroup}" method="POST" id="adminDeleteGroupForm">
+                <input type="hidden" th:value="${group.uuid}" name="uuid"/>
+                <input type="submit" class="buttonDanger" th:value="#{messages.admin.deleteGroupButton}"/>
+            </form>
+        </th:block>
+    </div>
+    <th:block th:if="${group.members}">
+        <div class="groupMemberCountDiv">
+            <div class="groupMemberCountLabel" th:text="#{messages.group.members}"></div>
+            <div class="groupMemberCount" th:text="${group.members.size()}"></div>
+        </div>
+        <ul class="groupMemberList">
+            <th:block th:each="user: ${group.members}">
+                <li class="groupMemberInList" th:text="${user.username}"></li>
+            </th:block>
+        </ul>
+    </th:block>
+    <th:block th:unless="${group.members}">
+        <div class="groupMemberCountDiv">
+            <div class="groupMemberCountLabel" th:text="#{messages.group.noMembers}"></div>
+        </div>
+    </th:block>
+    <div th:if="${group.events}" class="groupEventListDiv">
+        <th:block th:each="event: ${group.events}">
+            <div th:replace="~{fragments/event :: eventShort}"></div>
+        </th:block>
+    </div>
+    <div th:unless="${group.events}" class="groupEventListDiv">
+        <div class="groupEventsLabel" th:text="#{messages.group.noEvents}"></div>
+    </div>
+</div>
+
+</body>
+
+</html>

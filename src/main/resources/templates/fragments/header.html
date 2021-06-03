@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="header" id="header">
+    <div id="titleLogoutDiv">
+        <div id="titleDiv">
+            <a id="title" th:href="@{/home}">EVENTARZ</a>
+        </div>
+        <div class="usernameLogoutDiv" sec:authorize="isAuthenticated()">
+            <div sec:authentication="name">USER</div>
+            <form action="#" th:action="@{/logout}" method="POST">
+                <input type="submit" class="buttonNormal" th:value="#{messages.button.logout}"/>
+            </form>
+        </div>
+    </div>
+    <div id="navDiv">
+        <nav class="userHeaderDiv" sec:authorize="hasAuthority('USER')">
+            <a class="navLink" th:href="@{/myGroups}" th:text="#{messages.myGroups}">My Groups</a>
+            <a class="navLink" th:href="@{/createGroup}" th:text="#{messages.createGroups}">Create Group</a>
+            <a class="navLink" th:href="@{/findGroup}" th:text="#{messages.findGroups}">Find Group</a>
+            <a class="navLink" th:href="@{/myEvents}" th:text="#{messages.myEvents}">My Events</a>
+            <a class="navLink" th:href="@{/createEvent}" th:text="#{messages.createEvent}">Create Event</a>
+        </nav>
+        <nav class="adminHeaderDiv" sec:authorize="hasAuthority('ADMIN')">
+            <a class="navLink" th:href="@{/admin/findGroup}" th:text="#{messages.admin.findGroups}">Find Group</a>
+            <a class="navLink" th:href="@{/admin/findEvent}" th:text="#{messages.admin.findEvent}">Find Event</a>
+            <a class="navLink" th:href="@{/admin/findUser}" th:text="#{messages.admin.findUser}">Find User</a>
+        </nav>
+    </div>
+</div>
+
+</body>
+
+</html>

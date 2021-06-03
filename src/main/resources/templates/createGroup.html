@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head}">
+</head>
+
+<body>
+
+    <script th:src="@{/js/createGroup.js}"></script>
+
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div th:replace="~{fragments/message :: messageBox}"></div>
+
+    <div class="content">
+        <div class="pageHeader" id="createGroupHeader" th:text="#{messages.createGroupHeader}"></div>
+        <form action="#" th:action="@{/createGroup}" th:object="${groupForm}" method="POST" id="createGroupForm">
+            <div id="groupCreateNamePromptDiv">
+                <label th:text="#{messages.group.create.namePrompt}" id="groupCreateNamePrompt"
+                    for="groupCreateNameField">NAME</label>
+            </div>
+            <div id="groupCreateNameFieldDiv">
+                <input type="text" th:field="*{name}" name="name" id="groupCreateNameField" />
+            </div>
+            <div id="groupCreateNameRulesDiv">
+                <div id="groupCreateNameRules" class="rules" th:text="#{messages.group.create.nameRules}"></div>
+            </div>
+            <div id="groupCreateDescriptionPromptDiv">
+                <label th:text="#{messages.group.create.descriptionPrompt}" id="groupCreateDescriptionPrompt"
+                    for="groupCreateDescriptionField">DESCRIPTION</label>
+            </div>
+            <div id="groupCreateDescriptionFieldDiv">
+                <textarea th:field="*{description}" name="description" id="groupCreateDescriptionField" cols="50"
+                    rows="5">
+            </textarea>
+            </div>
+            <div id="groupCreateDescriptionRulesDiv">
+                <div id="groupCreateDescriptionRules" class="rules" th:text="#{messages.group.create.descriptionRules}">
+                </div>
+            </div>
+            <div id="createGroupSubmitButtonDiv">
+                <input type="submit" class="buttonNormal" th:value="#{messages.group.create.createButton}"
+                    id="createGroupSubmitButton" disabled />
+            </div>
+        </form>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

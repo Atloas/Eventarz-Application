@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:fragment="eventShort" class="eventShort">
+    <div class="eventLabel" th:text="#{messages.event.label}"></div>
+    <div class="eventNameDiv">
+        <a class="eventName" th:href="@{/event(uuid = ${event.uuid})}" th:text="${event.name}"></a>
+    </div>
+    <div class="eventDescription" th:text="${event.description}"></div>
+    <div class="eventDateDiv">
+        <div class="eventDateLabel" th:text="#{messages.event.date}"></div>
+        <div class="eventDate" th:text="${event.eventDate}"></div>
+    </div>
+    <div class="eventParticipantsCountDiv">
+        <div class="eventParticipantsLabel" th:text="#{messages.event.participants}"></div>
+        <div class="eventParticipantCount" th:text="${event.participantCount}"></div>
+        <div class="eventParticipantCountDelimiter" th:text="#{messages.event.participantCountDelimiter}"></div>
+        <div class="eventMaxParticipants" th:text="${event.maxParticipants}"></div>
+    </div>
+</div>
+
+<div th:fragment="event" class="event">
+    <div class="eventLabel" th:text="#{messages.event.label}"></div>
+    <div class="eventName" th:text="${event.name}"></div>
+    <div class="eventGroupDiv">
+        <div class="eventGroupLabel" th:text="#{messages.event.group}"></div>
+        <a class="eventGroup" th:href="@{/group(uuid = ${event.group.uuid})}" th:text="${event.group.name}"></a>
+    </div>
+    <div class="eventDescription" th:text="${event.description}"></div>
+    <div class="eventDateDiv">
+        <div class="eventDateLabel" th:text="#{messages.event.date}"></div>
+        <div class="eventDate" th:text="${event.eventDate}"></div>
+    </div>
+    <div class="eventPublishingDiv">
+        <div class="eventOrganizerLabel" th:text="#{messages.event.organizer}"></div>
+        <th:block th:if="${event.organizer}">
+            <div class="eventOrganizer" th:text="${event.organizer.username}"></div>
+        </th:block>
+        <th:block th:unless="${event.organizer}">
+            <div class="eventOrganizer deletedUser" th:text="#{messages.user.deleted}"></div>
+        </th:block>
+        <div class="eventPublishingDateLabel" th:text="#{messages.event.publishingDay}"></div>
+        <div class="eventPublishingDate" th:text="${event.publishedDate}"></div>
+    </div>
+    <div class="eventButtonsDiv">
+        <th:block class="eventButtons" sec:authorize="hasAuthority('USER')">
+            <th:block th:if="${allowed}">
+                <th:block th:if="${joined}">
+                    <form action="#" th:action="@{/leaveEvent}" method="POST" id="leaveEventForm">
+                        <input type="hidden" th:value="${event.uuid}" name="uuid"/>
+                        <input type="submit" class="buttonNormal" th:value="#{messages.event.leaveButton}"/>
+                    </form>
+                </th:block>
+                <th:block th:unless="${joined}">
+                    <form action="#" th:action="@{/joinEvent}" method="POST" id="joinEventForm">
+                        <input type="hidden" th:value="${event.uuid}" name="uuid"/>
+                        <input type="submit" class="buttonNormal" th:value="#{messages.event.joinButton}"/>
+                    </form>
+                </th:block>
+            </th:block>
+            <th:block th:unless="${allowed}">
+                <div th:text="#{messages.event.notAllowedToJoin}"></div>
+            </th:block>
+            <th:block th:if="${organized}">
+                <form action="#" th:action="@{/deleteEvent}" method="POST" id="deleteEventForm">
+                    <input type="hidden" th:value="${event.uuid}" name="uuid"/>
+                    <input type="submit" class="buttonDanger" th:value="#{messages.event.deleteButton}"/>
+                </form>
+            </th:block>
+        </th:block>
+        <th:block sec:authorize="hasAuthority('ADMIN')">
+            <form action="#" th:action="@{/admin/deleteEvent}" method="POST" id="adminDeleteEventForm">
+                <input type="hidden" th:value="${event.uuid}" name="uuid"/>
+                <input type="submit" class="buttonDanger" th:value="#{messages.admin.deleteEventButton}"/>
+            </form>
+        </th:block>
+    </div>
+    <div class="eventParticipantsDiv">
+        <div class="eventParticipantsCountDiv">
+            <div class="eventParticipantsLabel" th:text="#{messages.event.participants}"></div>
+            <th:block th:if="${event.participants}">
+                <div class="eventParticipantCount" th:text="${event.participants.size()}"></div>
+            </th:block>
+            <th:block th:unless="${event.participants}">
+                <div class="eventParticipantCount" th:text="#{messages.event.zero}"></div>
+            </th:block>
+            <div class="eventParticipantCountDelimiter" th:text="#{messages.event.participantCountDelimiter}"></div>
+            <div class="eventMaxParticipants" th:text="${event.maxParticipants}"></div>
+        </div>
+        <div th:if="${event.participants}" class="eventParticipantsListDiv">
+            <ul class="participantList">
+                <th:block th:each="user: ${event.participants}">
+                    <li class="participantName" th:text="${user.username}"></li>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="noEvents" class="noEvents">
+    <div th:text="#{messages.event.none}">NO EVENTS</div>
+</div>
+
+</body>
+
+</html>

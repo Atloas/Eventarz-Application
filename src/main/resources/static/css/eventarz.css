@@ -1,0 +1,551 @@
+body {
+    background-color: #20202e;
+    margin: 0px;
+    color: white;
+}
+
+#header {
+    background-color: #303145;
+    padding: 10px;
+}
+
+#titleLogoutDiv {
+    display: flex;
+    justify-content: space-between;
+}
+
+#title {
+    font-weight: bold;
+    font-size: 2em;
+}
+
+#navDiv {
+    display: flex;
+    justify-content: center;
+}
+
+.usernameLogoutDiv>div, .usernameLogoutDiv>form {
+    display: inline;
+}
+
+#footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #303145;
+}
+
+input, textarea {
+    background-color: #3c495e;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #556887;
+    color: white;
+}
+
+textarea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+}
+
+button {
+    border-width: 2px;
+    border-style: solid;
+    color: white;
+}
+
+button:hover {
+}
+
+.buttonNormal {
+    background-color: #bf8c00;
+    border-color: #edae00;
+}
+
+.buttonNormal:hover {
+    background-color: #8c6200;
+}
+
+.buttonNormal:disabled {
+    background-color: #826923;
+    border-color: #c28e00;
+    color: #cfcfcf;
+}
+
+.buttonDanger {
+    background-color: #610000;
+    border-color: #780000;
+}
+
+.buttonDanger:hover {
+    background-color: #590000;
+}
+
+select {
+    background-color: #3c495e;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #556887;
+    color: white;
+}
+
+#messageBox {
+    text-align: center;
+    margin: 5px;
+}
+
+.messageInfo, .messageError {
+    border-width: 5px;
+    border-style: solid;
+    background-color: #272738;
+    text-align: center;
+    padding: 5px;
+    margin: 5px;
+    display: inline-block;
+    min-width: 50%;
+    max-width: 75%;
+}
+
+.messageError {
+    border-color: #7a2626;
+}
+
+.messageInfo {
+    border-color: #267a27;
+}
+
+.messageInfoText, .messageErrorText {
+    padding: 5px 0px 10px 0px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link, a:visited {
+    color: #dbedff;
+}
+
+a:hover, a:active {
+    color: #edf6ff;
+}
+
+nav a {
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-left: 2px solid #dbedff;
+    border-right: 2px solid #dbedff;
+}
+
+.homeUpcomingDiv {
+    margin: 5px 0px 5px 0px;
+}
+
+.homeWelcomeDiv div {
+    display: inline;
+    margin: 10px 0 10px 0;
+    font-size: 1.2em;
+}
+
+.errorHeaderDiv div {
+    display: inline;
+    margin: 10px 0 10px 0;
+    font-size: 1.2em;
+}
+
+.errorContentDiv {
+    margin: 10px auto 10px auto;
+    padding: 5px;
+    min-width: 60%;
+    max-width: 90%;
+    background-color: #272738;
+}
+
+.content {
+    margin: 10px auto 10px auto;
+    padding: 5px;
+    min-width: 60%;
+    max-width: 90%;
+    background-color: #272738;
+}
+
+.pageHeader {
+    padding: 10px;
+    font-size: 1.1em;
+}
+
+.group, .groupShort, .event, .eventShort, .user, .userShort {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin: 5px;
+    padding: 10px;
+    background-color: #313147;
+}
+
+.group>div, .groupShort>div, .event>div, .eventShort>div, .user>div, .userShort>div {
+    padding: 2px;
+}
+
+.groupLabel, .eventLabel, .userLabel {
+    font-size: 0.8em;
+    color: #c3c3d9;
+}
+
+.groupName, .eventName {
+    font-size: 1.5em;
+}
+
+.username {
+    font-size: 1.2em;
+}
+
+.groupFoundingDiv>div {
+    display: inline
+}
+
+.groupMemberCountDiv>div {
+    display: inline;
+}
+
+.groupMemberList {
+    padding: 5px 0px 5px 10px;
+    margin: 0;
+    list-style: none;
+}
+
+.groupButtonsDiv>form {
+    display: inline;
+}
+
+.eventGroupDiv>div {
+    display: inline;
+}
+
+.eventDateDiv>div {
+    display: inline;
+}
+
+.eventPublishingDiv>div {
+    display: inline
+}
+
+.eventParticipantsCountDiv>div {
+    display: inline;
+}
+
+.eventButtonsDiv>form {
+    display: inline;
+}
+
+#createGroupForm {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto auto;
+}
+
+#createGroupForm>div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#groupCreateNamePromptDiv {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: right;
+}
+
+#groupCreateNameFieldDiv {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#groupCreateNameRulesDiv {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+#groupCreateDescriptionPromptDiv {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: right;
+}
+
+#groupCreateDescriptionFieldDiv {
+    grid-column: 2;
+    grid-row: 2;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#groupCreateDescriptionRulesDiv {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+#createGroupSubmitButtonDiv {
+    grid-column: 1 / span 3;
+    grid-row: 3;
+    text-align: center;
+}
+
+#createEventForm {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto auto auto auto auto auto;
+}
+
+#createEventForm>div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#eventCreateGroupSelectPromptDiv {
+     grid-column: 1;
+     grid-row: 1;
+     text-align: right;
+}
+
+#eventCreateGroupSelectFieldDiv {
+    grid-column: 2;
+    grid-row: 1;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#eventCreateNamePromptDiv {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: right;
+}
+
+#eventCreateNameFieldDiv {
+    grid-column: 2;
+    grid-row: 2;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#eventCreateNameRulesDiv {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+#eventCreateDescriptionPromptDiv {
+    grid-column: 1;
+    grid-row: 3;
+    text-align: right;
+}
+
+#eventCreateDescriptionFieldDiv {
+    grid-column: 2;
+    grid-row: 3;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#eventCreateDescriptionRulesDiv {
+    grid-column: 3;
+    grid-row: 3;
+}
+
+#eventCreateMaxParticipantsPromptDiv {
+    grid-column: 1;
+    grid-row: 4;
+    text-align: right;
+}
+
+#eventCreateMaxParticipantsFieldDiv {
+    grid-column: 2;
+    grid-row: 4;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#eventCreateEventDatePromptDiv {
+    grid-column: 1;
+    grid-row: 5;
+    text-align: right;
+}
+
+#eventCreateEventDateFieldDiv {
+    grid-column: 2;
+    grid-row: 5;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#eventCreateParticipateDiv {
+    grid-column: 1 / span 3;
+    grid-row: 6;
+    text-align: center;
+}
+
+#createEventSubmitButtonDiv {
+    grid-column: 1 / span 3;
+    grid-row: 7;
+    text-align: center;
+}
+
+#loginForm {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto auto;
+}
+
+#loginForm>div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+#loginUsernamePromptDiv {
+    grid-column: 1;
+    grid-row: 1;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: right;
+}
+
+#loginUsernameFieldDiv {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+#loginPasswordPromptDiv {
+    grid-column: 1;
+    grid-row: 2;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: right;
+}
+
+#loginPasswordFieldDiv {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#loginSubmitButtonDiv {
+    grid-column: 1 / span 3;
+    grid-row: 3;
+    text-align: center;
+}
+
+#registrationForm {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto auto auto;
+}
+
+#registrationForm>div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+#registrationUsernamePromptDiv {
+    grid-column: 1;
+    grid-row: 1;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: right;
+}
+
+#registrationUsernameFieldDiv {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.rules {
+    margin-left: 8px;
+    padding: 8px;
+    width: 30%;
+    position: absolute;
+    border: 2px solid #edae00;
+    background-color: #313147;
+    display: none;
+    text-align: justify;
+    text-justify: auto;
+}
+
+#registrationUsernameRulesDiv {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+
+#registrationPasswordPromptDiv {
+    grid-column: 1;
+    grid-row: 2;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: right;
+}
+
+#registrationPasswordFieldDiv {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#registrationRepeatPasswordPromptDiv {
+    grid-column: 1;
+    grid-row: 3;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: right;
+}
+
+#registrationRepeatPasswordFieldDiv {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+#registrationSubmitButtonDiv {
+    grid-column: 1 / span 3;
+    grid-row: 4;
+    text-align: center;
+}
+
+#registerLinkDiv, #loginLinkDiv, #loginPrompt, #registerPrompt {
+    text-align: center;
+    padding: 5px 0 10px 0;
+}
+
+.searchForm {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto;
+}
+
+.searchForm>div {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.searchNamePromptDiv {
+    grid-column: 1;
+    grid-row: 1;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: right;
+}
+
+.searchNameFieldDiv {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.searchNameRulesDiv {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.searchSubmitButtonDiv {
+    grid-column: 1 / span 3;
+    grid-row: 2;
+    text-align: center;
+}
