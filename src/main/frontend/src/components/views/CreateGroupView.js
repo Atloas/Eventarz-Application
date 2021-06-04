@@ -48,6 +48,7 @@ class CreateGroupView extends React.Component {
         };
         switch (body.status) {
           case 400:
+          case 404:
             message.text = body.message;
             break;
           // case 403:

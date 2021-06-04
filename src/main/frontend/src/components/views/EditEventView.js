@@ -53,6 +53,7 @@ class EditEventView extends React.Component {
         };
         switch (body.status) {
           case 400:
+          case 404:
             message.text = body.message;
             break;
           // case 403:
@@ -71,16 +72,20 @@ class EditEventView extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      eventName: this.props.eventDetails.name,
-      values: {
-        name: this.props.eventDetails.name,
-        description: this.props.eventDetails.description,
-        maxParticipants: this.props.eventDetails.maxParticipants,
-        // Giving up on this ever displaying properly
-        eventDate: DateTime.fromFormat(this.props.eventDetails.eventDate, eventDateTimeStorageFormat).toFormat(eventDateTimeInputFormat)
-      }
-    })
+    if (!this.props.eventDetails) {
+      this.setState({ redirect: "/" });
+    } else {
+      this.setState({
+        eventName: this.props.eventDetails.name,
+        values: {
+          name: this.props.eventDetails.name,
+          description: this.props.eventDetails.description,
+          maxParticipants: this.props.eventDetails.maxParticipants,
+          // Giving up on this ever displaying properly
+          eventDate: DateTime.fromFormat(this.props.eventDetails.eventDate, eventDateTimeStorageFormat).toFormat(eventDateTimeInputFormat)
+        }
+      })
+    }
   }
 
   onFieldChange(event) {
@@ -106,7 +111,7 @@ class EditEventView extends React.Component {
     this.setState({ reloading: true });
     // fetch("https://localhost:8083/gateway/events/" + this.props.eventDetails.uuid, {
     fetch("http://localhost:8070/events/" + this.props.eventDetails.uuid, {
-    method: "PUT",
+      method: "PUT",
       headers: {
         'mode': 'cors',
         'Content-Type': 'application/json',
@@ -184,6 +189,7 @@ class EditEventView extends React.Component {
     if (this.state.redirect) {
       return <Redirect push to={this.state.redirect} />
     }
+
     if (!this.props.eventDetails) {
       return <Redirect push to="/" />
     }

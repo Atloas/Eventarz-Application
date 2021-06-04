@@ -9,7 +9,7 @@ class Header extends React.Component {
       <div className="header">
         <div className="titleLogoutDiv">
           <div className="titleDiv">
-            <NavLink to="/">EVENTARZ</NavLink>
+            <NavLink className="title" to="/">EVENTARZ</NavLink>
           </div>
           <Logout />
         </div>

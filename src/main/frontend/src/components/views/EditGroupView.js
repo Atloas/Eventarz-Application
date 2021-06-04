@@ -36,13 +36,17 @@ class EditGroupView extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      groupName: this.props.groupDetails.name,
-      values: {
-        name: this.props.groupDetails.name,
-        description: this.props.groupDetails.description,
-      }
-    })
+    if (!this.props.groupDetails) {
+      this.setState({ redirect: "/" });
+    } else {
+      this.setState({
+        groupName: this.props.groupDetails.name,
+        values: {
+          name: this.props.groupDetails.name,
+          description: this.props.groupDetails.description,
+        }
+      })
+    }
   }
 
   handleFetchErrors(response) {
@@ -54,6 +58,7 @@ class EditGroupView extends React.Component {
         };
         switch (body.status) {
           case 400:
+          case 404:
             message.text = body.message;
             break;
           // case 403:

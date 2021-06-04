@@ -32,7 +32,8 @@ class LoginView extends React.Component {
           text: ""
         };
         switch (body.status) {
-          case 400 | 401:
+          case 400:
+          case 401:
             message.text = body.message;
             break;
           default:
