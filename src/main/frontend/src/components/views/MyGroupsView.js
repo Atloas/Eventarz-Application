@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import GroupList from '../group/GroupList';
 import { setMessageAction } from '../../redux/actions';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class MyGroupsView extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class MyGroupsView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -42,7 +43,7 @@ class MyGroupsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://localhost:8083/gateway/groups", {
+    fetch(gatewayAddress + "/groups", {
       method: "GET",
       headers: {
         'mode': 'cors',

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setGroupDetailsAction, setMessageAction } from '../../redux/actions';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class EditGroupView extends React.Component {
   constructor(props) {
@@ -68,7 +69,7 @@ class EditGroupView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -79,8 +80,8 @@ class EditGroupView extends React.Component {
   onSubmit(event) {
     event.preventDefault()
 
-    this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/groups/" + this.props.groupDetails.uuid, {
+    this.setState({ loading: true });
+    fetch(gatewayAddress + "/groups/" + this.props.groupDetails.uuid, {
       method: "PUT",
       headers: {
         'mode': 'cors',
@@ -155,7 +156,7 @@ class EditGroupView extends React.Component {
     var buttonDisabled = !this.validate();
     return (
       <div>
-        {this.state.reloading ?
+        {this.state.loading ?
           <Loading />
           :
           null

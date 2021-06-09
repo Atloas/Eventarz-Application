@@ -5,6 +5,12 @@
   0: #20202e
   1: #26273b
   2: #2e2f44
+
+  Text colours:
+  default: white
+  link: #dbedff
+  link:hover: #edf6ff
+  special: #edae00
 */
 
 body {
@@ -157,12 +163,13 @@ a:hover, a:active {
   color: #edf6ff;
 }
 
-nav a {
+nav>a {
   padding: 5px;
   margin-left: 5px;
   margin-right: 5px;
   border-left: 2px solid #dbedff;
   border-right: 2px solid #dbedff;
+  font-size: 1.1em;
 }
 
 .homeUpcomingDiv {
@@ -245,7 +252,6 @@ nav a {
 .groupMemberList {
   padding: 5px 0px 5px 10px;
   margin: 0;
-  list-style: none;
 }
 
 .groupButtonsDiv>form {
@@ -270,6 +276,11 @@ nav a {
 
 .eventButtonsDiv>form {
   display: inline;
+}
+
+.eventHappenedDiv {
+  font-weight: bold;
+  color: #edae00
 }
 
 .userList {
@@ -640,28 +651,41 @@ nav a {
   grid-row: 2;
 }
 
-.editEventMaxParticipantsPromptDiv {
+.editEventMaxParticipantsWarningPromptDiv {
   grid-column: 1;
   grid-row: 3;
   text-align: right;
 }
 
-.editEventMaxParticipantsFieldDiv {
+.editEventMaxParticipantsWarningTextDiv {
   grid-column: 2;
   grid-row: 3;
+  margin: 5px;
+  text-align: left;
+}
+
+.editEventMaxParticipantsPromptDiv {
+  grid-column: 1;
+  grid-row: 4;
+  text-align: right;
+}
+
+.editEventMaxParticipantsFieldDiv {
+  grid-column: 2;
+  grid-row: 4;
   margin-left: 5px;
   margin-right: 5px;
 }
 
 .editEventEventDatePromptDiv {
   grid-column: 1;
-  grid-row: 4;
+  grid-row: 5;
   text-align: right;
 }
 
 .editEventEventDateFieldDiv {
   grid-column: 2;
-  grid-row: 4;
+  grid-row: 5;
   margin-left: 5px;
   margin-right: 5px;
 }
@@ -679,7 +703,7 @@ nav a {
 
 .editEventButtonDiv {
   grid-column: 1 / span 3;
-  grid-row: 5;
+  grid-row: 6;
   text-align: center;
 }
 
@@ -765,4 +789,43 @@ nav a {
 
 .loadingText {
   padding: 5px 0px 10px 0px;
+}
+
+ul {
+  list-style: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 5px;
+  font-size: 1.1em;
+  color: #dbedff;
+  border-left: 2px solid #dbedff;
+  border-right: 2px solid #dbedff;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  padding: 5px;
+  margin: 0;
+  min-width: 9em;
+  width: auto;
+  z-index: 1;
+  background-color: #26273b;
+  border: 2px solid #dbedff;
+  box-shadow: 0px 8px 15px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content li {
+  margin: 5px;
+  padding: 5px;
+  background-color: #2e2f44;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }

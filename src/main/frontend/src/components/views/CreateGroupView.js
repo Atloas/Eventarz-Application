@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setMessageAction } from '../../redux/actions';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class CreateGroupView extends React.Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class CreateGroupView extends React.Component {
       description: false,
     },
     redirect: "",
-    reloading: false
+    loading: false
   }
 
   handleFetchErrors(response) {
@@ -58,7 +59,7 @@ class CreateGroupView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -69,8 +70,8 @@ class CreateGroupView extends React.Component {
   onSubmit(event) {
     event.preventDefault()
 
-    this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/groups", {
+    this.setState({ loading: true });
+    fetch(gatewayAddress + "/groups", {
       method: "POST",
       headers: {
         'mode': 'cors',
@@ -139,7 +140,7 @@ class CreateGroupView extends React.Component {
     var buttonDisabled = !this.validate();
     return (
       <div>
-        {this.state.reloading ?
+        {this.state.loading ?
           <Loading />
           :
           null
@@ -154,7 +155,7 @@ class CreateGroupView extends React.Component {
               name="name"
               type="text"
               placeholder="Name"
-              maxLength="64"
+              maxLength="32"
               value={this.state.values.name}
               onChange={this.onChange}
               onFocus={this.onFocus}

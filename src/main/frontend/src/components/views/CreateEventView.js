@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setMessageAction } from '../../redux/actions';
 import { DateTime } from 'luxon';
-import { eventDateTimeStorageFormat } from '../../scripts/dateFormats';
+import { eventDateTimeStorageFormat } from '../../consts/dateFormats';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class CreateEventView extends React.Component {
   constructor(props) {
@@ -69,7 +70,7 @@ class CreateEventView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -78,7 +79,7 @@ class CreateEventView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://localhost:8083/gateway/groups", {
+    fetch(gatewayAddress + "/groups", {
       headers: {
         'mode': 'cors',
         'Accept': 'application/json',
@@ -141,8 +142,8 @@ class CreateEventView extends React.Component {
     var date = DateTime.fromISO(this.state.values.eventDate);
     var formattedDate = date.toFormat(eventDateTimeStorageFormat);
 
-    this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/events", {
+    this.setState({ loading: true });
+    fetch(gatewayAddress + "/events", {
       method: "POST",
       headers: {
         'mode': 'cors',
@@ -231,7 +232,7 @@ class CreateEventView extends React.Component {
       if (this.state.groups) {
         content = (
           <div>
-            {this.state.reloading ?
+            {this.state.loading ?
               <Loading />
               :
               null
@@ -257,7 +258,7 @@ class CreateEventView extends React.Component {
                   name="name"
                   type="text"
                   placeholder="Name"
-                  maxLength="64"
+                  maxLength="32"
                   value={this.state.values.name}
                   onChange={this.onFieldChange}
                   onFocus={this.onFocus}

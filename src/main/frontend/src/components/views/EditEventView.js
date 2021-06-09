@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setMessageAction } from '../../redux/actions';
 import { DateTime } from 'luxon';
-import { eventDateTimeStorageFormat, eventDateTimeInputFormat } from '../../scripts/dateFormats';
+import { eventDateTimeStorageFormat, eventDateTimeInputFormat } from '../../consts/dateFormats';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class EditEventView extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class EditEventView extends React.Component {
       description: false,
     },
     redirect: "",
-    reloading: false
+    loading: false
   }
 
   handleFetchErrors(response) {
@@ -63,7 +64,7 @@ class EditEventView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -108,9 +109,8 @@ class EditEventView extends React.Component {
     var date = DateTime.fromISO(this.state.values.eventDate);
     var formattedDate = date.toFormat(eventDateTimeStorageFormat);
 
-    this.setState({ reloading: true });
-    // fetch("https://localhost:8083/gateway/events/" + this.props.eventDetails.uuid, {
-    fetch("http://localhost:8070/events/" + this.props.eventDetails.uuid, {
+    this.setState({ loading: true });
+    fetch(gatewayAddress + "/events/" + this.props.eventDetails.uuid, {
       method: "PUT",
       headers: {
         'mode': 'cors',
@@ -198,7 +198,7 @@ class EditEventView extends React.Component {
     var buttonDisabled = !this.validate();
     content = (
       <div>
-        {this.state.reloading ?
+        {this.state.loading ?
           <Loading />
           :
           null
@@ -239,6 +239,12 @@ class EditEventView extends React.Component {
           </div>
           <div className="editEventDescriptionRulesDiv">
             <div className={"editEventDescriptionRules rules" + (this.state.rules.description ? "" : " hidden")}>An event description can only contain letters, numbers, as well as a few select symbols.</div>
+          </div>
+          <div className="editEventMaxParticipantsWarningPromptDiv">
+            Warning:
+          </div>
+          <div className="editEventMaxParticipantsWarningTextDiv">
+            Lowering the maximum participants number will remove all participants from this event!
           </div>
           <div className="editEventMaxParticipantsPromptDiv">
             <label className="editEventMaxParticipantsPrompt" htmlFor="editEventMaxParticipantsField">Max participants: </label>

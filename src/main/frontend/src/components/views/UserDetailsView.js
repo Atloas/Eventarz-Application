@@ -5,6 +5,7 @@ import { setMessageAction } from '../../redux/actions';
 import UserEventList from "../event/UserEventList";
 import UserGroupList from "../group/UserGroupList";
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class UserDetailsView extends React.Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class UserDetailsView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false, reloading: false, redirect: "/" });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -48,8 +49,16 @@ class UserDetailsView extends React.Component {
     return response;
   }
 
+  // TODO: This for normal users too, just change the fetch address and hide the ban button
+
   componentDidMount() {
-    fetch("https://localhost:8083/gateway/admin/users/" + this.props.match.params.username, {
+    var uri;
+    if (this.props.currentUser.role === "ADMIN") {
+      uri = gatewayAddress + "/admin/users/" + this.props.match.params.username
+    } else {
+      uri = gatewayAddress + "/users/" + this.props.match.params.username
+    }
+    fetch(uri, {
       headers: {
         'mode': 'cors',
         'Accept': 'application/json',
@@ -68,7 +77,7 @@ class UserDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/admin/users/" + this.state.user.username + '/banned', {
+    fetch(gatewayAddress + "/admin/users/" + this.state.user.username + '/banned', {
       method: 'PUT',
       headers: {
         'mode': 'cors',
@@ -90,7 +99,7 @@ class UserDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/admin/users/" + this.state.user.username + '/banned', {
+    fetch(gatewayAddress + "/admin/users/" + this.state.user.username + '/banned', {
       method: 'PUT',
       headers: {
         'mode': 'cors',
@@ -118,7 +127,7 @@ class UserDetailsView extends React.Component {
       content = <Loading />;
     } else {
       var buttonDiv = null;
-      if (this.props.currentUser.roles.includes("ADMIN")) {
+      if (this.props.currentUser.role === "ADMIN") {
         if (this.state.user.banned) {
           buttonDiv = (
             <div className="userButtonsDiv" >
@@ -138,7 +147,7 @@ class UserDetailsView extends React.Component {
       if (this.state.user.foundedGroups.length) {
         foundedGroupsDiv = (
           <div className="userFoundedGroupsDiv">
-            <div className="userFoundedGroupsLabel">Founded Groups:</div>
+            <div className="userFoundedGroupsLabel">Founded Groups: {this.state.user.foundedGroups.length}</div>
             <UserGroupList groups={this.state.user.foundedGroups} />
           </div>
         )
@@ -154,7 +163,7 @@ class UserDetailsView extends React.Component {
       if (this.state.user.joinedGroups.length) {
         joinedGroupsDiv = (
           <div className="userJoinedGroupsDiv">
-            <div className="userJoinedGroupsLabel">Joined Groups:</div>
+            <div className="userJoinedGroupsLabel">Joined Groups: {this.state.user.joinedGroups.length}</div>
             <UserGroupList groups={this.state.user.joinedGroups} />
           </div>
         )
@@ -170,7 +179,7 @@ class UserDetailsView extends React.Component {
       if (this.state.user.organizedEvents.length) {
         organizedEventsDiv = (
           <div className="userOrganizedEventsDiv">
-            <div className="userOrganizedEventsLabel">Organized Events:</div>
+            <div className="userOrganizedEventsLabel">Organized Events: {this.state.user.organizedEvents.length}</div>
             <UserEventList events={this.state.user.organizedEvents} />
           </div>
         )
@@ -186,7 +195,7 @@ class UserDetailsView extends React.Component {
       if (this.state.user.joinedEvents.length) {
         joinedEventsDiv = (
           <div className="userJoinedEventsDiv">
-            <div className="userJoinedEventsLabel">Joined Events:</div>
+            <div className="userJoinedEventsLabel">Joined Events: {this.state.user.joinedEvents.length}</div>
             <UserEventList events={this.state.user.joinedEvents} />
           </div>
         )
@@ -199,6 +208,11 @@ class UserDetailsView extends React.Component {
       }
       content = (
         <div className="user">
+          {this.state.reloading ?
+            <Loading />
+            :
+            null
+          }
           <div className="userLabel">User</div>
           <div className="username">{this.state.user.username}</div>
           <div className="userRegisterDateDiv">

@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { NavLink, Redirect } from 'react-router-dom';
 import { setEventDetailsAction, clearEventDetailsAction, setMessageAction } from '../../redux/actions';
 import { DateTime } from 'luxon';
-import { eventDateTimeStorageFormat, eventDateTimeDisplayFormat } from '../../scripts/dateFormats';
+import { eventDateTimeStorageFormat, eventDateTimeDisplayFormat } from '../../consts/dateFormats';
 import EventParticipantList from '../user/EventParticipantList';
 import Loading from '../common/Loading';
 import { processEventData } from "../../scripts/eventDataUtils";
+import { gatewayAddress } from "../../consts/addresses";
 
 class EventDetailsView extends React.Component {
   constructor(props) {
@@ -44,7 +45,7 @@ class EventDetailsView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false, reloading: false, redirect: "/" });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -54,10 +55,10 @@ class EventDetailsView extends React.Component {
 
   componentDidMount() {
     var address = "";
-    if (this.props.currentUser.roles.includes("ADMIN")) {
-      address = "https://localhost:8083/gateway/admin/events/";
+    if (this.props.currentUser.role === "ADMIN") {
+      address = gatewayAddress + "/admin/events/";
     } else {
-      address = "https://localhost:8083/gateway/events/";
+      address = gatewayAddress + "/events/";
     }
     fetch(address + this.props.match.params.uuid, {
       headers: {
@@ -80,7 +81,7 @@ class EventDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/events/" + this.props.eventDetails.uuid + '/participants', {
+    fetch(gatewayAddress + "/events/" + this.props.eventDetails.uuid + '/participants', {
       method: 'POST',
       headers: {
         'mode': 'cors',
@@ -102,7 +103,7 @@ class EventDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/events/" + this.props.eventDetails.uuid + '/participants/' + this.props.currentUser.username, {
+    fetch(gatewayAddress + "/events/" + this.props.eventDetails.uuid + '/participants/' + this.props.currentUser.username, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -130,7 +131,7 @@ class EventDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/events/" + this.props.eventDetails.uuid, {
+    fetch(gatewayAddress + "/events/" + this.props.eventDetails.uuid, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -150,7 +151,7 @@ class EventDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/admin/events/" + this.props.eventDetails.uuid, {
+    fetch(gatewayAddress + "/admin/events/" + this.props.eventDetails.uuid, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -177,19 +178,21 @@ class EventDetailsView extends React.Component {
     } else {
       var buttons = [];
 
-      if (this.props.currentUser.roles.includes("USER")) {
-        if (this.props.eventDetails.joined) {
-          buttons.push(<button key="leaveButton" className="buttonNormal" onClick={this.onLeaveClick}>Leave</button>);
-        } else {
-          if (this.props.eventDetails.participants.length < this.props.eventDetails.maxParticipants) {
-            buttons.push(<button key="joinButton" className="buttonNormal" onClick={this.onJoinClick}>Join</button>);
+      if (this.props.currentUser.role === "USER") {
+        if (!this.props.eventDetails.happened && this.props.eventDetails.allowed) {
+          if (this.props.eventDetails.joined) {
+            buttons.push(<button key="leaveButton" className="buttonNormal" onClick={this.onLeaveClick}>Leave</button>);
+          } else {
+            if (this.props.eventDetails.participants.length < this.props.eventDetails.maxParticipants) {
+              buttons.push(<button key="joinButton" className="buttonNormal" onClick={this.onJoinClick}>Join</button>);
+            }
+          }
+          if (this.props.eventDetails.organized) {
+            buttons.push(<button key="editButton" className="buttonNormal" onClick={this.onEditClick}>Edit</button>);
+            buttons.push(<button key="deleteButton" className="buttonDanger" onClick={this.onDeleteClick}>Delete</button>);
           }
         }
-        if (this.props.eventDetails.organized) {
-          buttons.push(<button key="editButton" className="buttonNormal" onClick={this.onEditClick}>Edit</button>);
-          buttons.push(<button key="deleteButton" className="buttonDanger" onClick={this.onDeleteClick}>Delete</button>);
-        }
-      } else if (this.props.currentUser.roles.includes("ADMIN")) {
+      } else if (this.props.currentUser.role === "ADMIN") {
         buttons.push(<button key="adminDeleteButton" className="buttonDanger" onClick={this.onAdminDeleteClick}>Delete</button>);
       }
       content = (
@@ -199,7 +202,6 @@ class EventDetailsView extends React.Component {
             :
             null
           }
-          <div className="eventLabel">Event</div>
           <div className="eventName">{this.props.eventDetails.name}</div>
           <div className="eventGroupDiv">
             <div className="eventGroupLabel">Group: </div>
@@ -216,9 +218,15 @@ class EventDetailsView extends React.Component {
             <div className="eventPublishingDateLabel"> on </div>
             <div className="eventPublishingDate">{DateTime.fromFormat(this.props.eventDetails.publishedDate, eventDateTimeStorageFormat).toFormat(eventDateTimeDisplayFormat)}</div>
           </div>
-          <div className="eventButtonsDiv">
-            {buttons}
-          </div>
+          {this.props.eventDetails.happened ?
+            <div className="eventHappenedDiv">
+              Expired!
+            </div>
+            :
+            <div className="eventButtonsDiv">
+              {buttons}
+            </div>
+          }
           <div className="eventParticipantsDiv">
             <div className="eventParticipantsCountDiv">
               <div className="eventParticipantsLabel">Participants: </div>

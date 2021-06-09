@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { setMessageAction } from '../../redux/actions';
 import EventHomeList from '../event/EventHomeList';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class HomeView extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class HomeView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -42,8 +43,8 @@ class HomeView extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.currentUser.roles.includes("USER")) {
-      fetch("https://localhost:8083/gateway/events?home", {
+    if (this.props.currentUser.role === "USER") {
+      fetch(gatewayAddress + "/events?home", {
         method: "GET",
         headers: {
           'mode': 'cors',
@@ -66,19 +67,19 @@ class HomeView extends React.Component {
     }
 
     var content = null;
-    if (this.props.currentUser.roles.includes("USER")) {
+    if (this.props.currentUser.role === "USER") {
       if (this.state.loading) {
         content = <Loading />;
       } else {
         if (this.state.events.length) {
           content = (
             <div>
-              <div className="headerPrompt">Your upcoming Events:</div>
+              <div className="headerPrompt">Here are your Events for the coming week:</div>
               <EventHomeList events={this.state.events} />
             </div>
           );
         } else {
-          content = <div className="noEventsText">No upcoming Events!</div>
+          content = <div className="noEventsText">You have no Events set for the coming week!</div>
         }
       }
     }

@@ -21,6 +21,7 @@ import EditGroupView from "./views/EditGroupView";
 import GroupDetailsView from "./views/GroupDetailsView";
 import UserDetailsView from "./views/UserDetailsView";
 import Loading from './common/Loading';
+import { gatewayAddress } from "../consts/addresses";
 
 class App extends React.Component {
 
@@ -38,7 +39,7 @@ class App extends React.Component {
   componentDidMount() {
     if (localStorage.getItem("token")) {
       this.setState({ loading: true })
-      fetch("https://localhost:8083/gateway/refreshLogin", {
+      fetch(gatewayAddress + "/refreshLogin", {
         method: "POST",
         headers: {
           'mode': 'cors',
@@ -52,7 +53,7 @@ class App extends React.Component {
         .then(data => {
           this.setState({ loading: false })
           localStorage.setItem("token", data.token);
-          this.props.loginUser({ username: data.username, roles: data.roles });
+          this.props.loginUser({ username: data.username, role: data.role });
         })
         .catch(error => {
           localStorage.removeItem("token");

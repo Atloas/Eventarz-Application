@@ -38,7 +38,7 @@ class Logout extends React.Component {
     if (this.props.currentUser) {
       content = (
         <div className="usernameLogoutDiv">
-          <div>{this.props.currentUser.username}</div>
+          <NavLink to={"/user/" + this.props.currentUser.username}>{this.props.currentUser.username}</NavLink>
           <button className="buttonNormal" onClick={this.logout}>Logout</button>
         </div>
       )

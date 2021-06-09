@@ -6,7 +6,6 @@ class GroupSearched extends React.Component {
   render() {
     return (
       <div className="groupSearched">
-        <div className="groupLabel">Group</div>
         <div className="groupNameDiv">
           <NavLink className="groupName" to={"/group/" + this.props.group.uuid}>{this.props.group.name}</NavLink>
         </div>

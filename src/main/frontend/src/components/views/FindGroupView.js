@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { setFoundGroupsAction, setMessageAction } from '../../redux/actions';
 import GroupList from '../group/GroupList';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class FindGroupView extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class FindGroupView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -65,7 +66,7 @@ class FindGroupView extends React.Component {
     event.preventDefault()
 
     this.setState({ loading: true, searched: true })
-    fetch("https://localhost:8083/gateway/admin/groups?name=" + encodeURIComponent(this.state.name), {
+    fetch(gatewayAddress + "/admin/groups?name=" + encodeURIComponent(this.state.name), {
       method: "GET",
       headers: {
         'mode': 'cors',

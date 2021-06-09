@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { setFoundEventsAction, setMessageAction } from '../../redux/actions';
 import EventList from '../event/EventList';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class FindEventView extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ class FindEventView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -65,7 +66,7 @@ class FindEventView extends React.Component {
     event.preventDefault()
 
     this.setState({ loading: true, searched: true })
-    fetch("https://localhost:8083/gateway/admin/events?name=" + encodeURIComponent(this.state.name), {
+    fetch(gatewayAddress + "/admin/events?name=" + encodeURIComponent(this.state.name), {
       method: "GET",
       headers: {
         'mode': 'cors',
@@ -76,7 +77,10 @@ class FindEventView extends React.Component {
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(data => {
-        this.props.setFoundEvents(data);
+        var upcomingEvents = data.filter(event => !event.happened);
+        var happenedEvents = data.filter(event => event.happened);
+        var events = upcomingEvents.concat(happenedEvents);
+        this.props.setFoundEvents(events);
         this.setState({ loading: false })
       })
       .catch(error => console.log(error));

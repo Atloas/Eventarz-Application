@@ -1,5 +1,5 @@
 export const initialState = {
-  // username, roles
+  // username, role
   currentUser: null,
   // uuid, name, group (uuid, name), eventDate, publishedDate, organizer (username), participantCount, maxParticipants, participants [username], joined, organized
   eventDetails: null,

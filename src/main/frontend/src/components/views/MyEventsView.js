@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import EventHomeList from '../event/EventHomeList';
 import { setMessageAction } from "../../redux/actions";
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class MyEventsView extends React.Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class MyEventsView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -42,7 +43,7 @@ class MyEventsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://localhost:8083/gateway/events", {
+    fetch(gatewayAddress + "/events", {
       method: "GET",
       headers: {
         'mode': 'cors',
@@ -53,8 +54,10 @@ class MyEventsView extends React.Component {
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(data => {
-        // this.props.setMyEvents(data);
-        this.setState({ loading: false, events: data });
+        var upcomingEvents = data.filter(event => !event.happened);
+        var happenedEvents = data.filter(event => event.happened);
+        var events = upcomingEvents.concat(happenedEvents)
+        this.setState({ loading: false, events: events });
       })
       .catch(error => console.log(error));
   }

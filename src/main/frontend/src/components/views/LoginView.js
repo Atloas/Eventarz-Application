@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { loginAction, setMessageAction } from '../../redux/actions';
 import Loading from '../common/Loading';
+import { gatewayAddress } from "../../consts/addresses";
 
 class LoginView extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class LoginView extends React.Component {
   state = {
     username: "",
     password: "",
-    reloading: false
+    loading: false
   }
 
   handleFormChange = event => {
@@ -40,7 +41,7 @@ class LoginView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -51,9 +52,8 @@ class LoginView extends React.Component {
   handleSubmit(event) {
     event.preventDefault()
 
-    this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/login", {
-    // fetch("https://localhost:8070/login", {
+    this.setState({ loading: true });
+    fetch(gatewayAddress + "/login", {
       method: "POST",
       headers: {
         'mode': 'cors',
@@ -69,7 +69,7 @@ class LoginView extends React.Component {
       .then(response => response.json())
       .then(data => {
         localStorage.setItem("token", data.token)
-        this.props.loginUser({ username: data.username, roles: data.roles })
+        this.props.loginUser({ username: data.username, role: data.role })
       })
       .catch(error => console.log(error));
   }
@@ -77,7 +77,7 @@ class LoginView extends React.Component {
   render() {
     return (
       <div>
-        {this.state.reloading ?
+        {this.state.loading ?
           <Loading />
           :
           null

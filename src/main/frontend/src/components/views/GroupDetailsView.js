@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setGroupDetailsAction, clearGroupDetailsAction, setMessageAction } from '../../redux/actions';
 import { DateTime } from 'luxon';
-import { groupDateStorageFormat, groupDateDisplayFormat } from '../../scripts/dateFormats';
+import { groupDateStorageFormat, groupDateDisplayFormat } from '../../consts/dateFormats';
 import { processGroupData } from "../../scripts/groupDataUtils";
 import GroupEventList from "../event/GroupEventList";
 import Loading from '../common/Loading';
 import GroupMemberList from '../user/GroupMemberList';
+import { gatewayAddress } from "../../consts/addresses";
 
 class GroupDetailsView extends React.Component {
   constructor(props) {
@@ -45,7 +46,7 @@ class GroupDetailsView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false, reloading: false, redirect: "/" });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -54,7 +55,7 @@ class GroupDetailsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch("https://localhost:8083/gateway/groups/" + this.props.match.params.uuid, {
+    fetch(gatewayAddress + "/groups/" + this.props.match.params.uuid, {
       headers: {
         'mode': 'cors',
         'Accept': 'application/json',
@@ -64,6 +65,11 @@ class GroupDetailsView extends React.Component {
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(data => {
+        var events = data.events;
+        var upcomingEvents = events.filter(event => !event.happened);
+        var happenedEvents = events.filter(event => event.happened);
+        var events = upcomingEvents.concat(happenedEvents);
+        data.events = events;
         this.props.setGroupDetails(processGroupData(data, this.props.currentUser.username));
         this.setState({ loading: false });
       })
@@ -74,7 +80,7 @@ class GroupDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/groups/" + this.props.groupDetails.uuid + '/members', {
+    fetch(gatewayAddress + "/groups/" + this.props.groupDetails.uuid + '/members', {
       method: 'POST',
       headers: {
         'mode': 'cors',
@@ -86,6 +92,11 @@ class GroupDetailsView extends React.Component {
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(data => {
+        var events = data.events;
+        var upcomingEvents = events.filter(event => !event.happened);
+        var happenedEvents = events.filter(event => event.happened);
+        var events = upcomingEvents.concat(happenedEvents);
+        data.events = events;
         this.props.setGroupDetails(processGroupData(data, this.props.currentUser.username));
         this.setState({ reloading: false });
       })
@@ -96,7 +107,7 @@ class GroupDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/groups/" + this.props.groupDetails.uuid + '/members/' + this.props.currentUser.username, {
+    fetch(gatewayAddress + "/groups/" + this.props.groupDetails.uuid + '/members/' + this.props.currentUser.username, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -107,6 +118,12 @@ class GroupDetailsView extends React.Component {
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(data => {
+        // TODO: Duplication. Here and in eventdetailsview
+        var events = data.events;
+        var upcomingEvents = events.filter(event => !event.happened);
+        var happenedEvents = events.filter(event => event.happened);
+        var events = upcomingEvents.concat(happenedEvents);
+        data.events = events;
         this.props.setGroupDetails(processGroupData(data, this.props.currentUser.username));
         this.setState({ reloading: false });
       })
@@ -123,7 +140,7 @@ class GroupDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/groups/" + this.props.groupDetails.uuid, {
+    fetch(gatewayAddress + "/groups/" + this.props.groupDetails.uuid, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -143,7 +160,7 @@ class GroupDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/admin/groups/" + this.props.groupDetails.uuid, {
+    fetch(gatewayAddress + "/admin/groups/" + this.props.groupDetails.uuid, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -170,7 +187,7 @@ class GroupDetailsView extends React.Component {
     } else {
       var buttons = [];
 
-      if (this.props.currentUser.roles.includes("USER")) {
+      if (this.props.currentUser.role === "USER") {
         if (this.props.groupDetails.founded) {
           buttons.push(<button key="editButton" className="buttonNormal" onClick={this.onEditClick}>Edit</button>);
           buttons.push(<button key="deleteButton" className="buttonDanger" onClick={this.onDeleteClick}>Delete</button>);
@@ -181,7 +198,7 @@ class GroupDetailsView extends React.Component {
             buttons.push(<button key="joinButton" className="buttonNormal" onClick={this.onJoinClick}>Join</button>);
           }
         }
-      } else if (this.props.currentUser.roles.includes("ADMIN")) {
+      } else if (this.props.currentUser.role === "ADMIN") {
         buttons.push(<button key="adminDeleteButton" className="buttonDanger" onClick={this.onAdminDeleteClick}>Delete</button>);
       }
       content = (
@@ -191,7 +208,6 @@ class GroupDetailsView extends React.Component {
             :
             null
           }
-          <div className="groupLabel">Group</div>
           <div className="groupName">{this.props.groupDetails.name}</div>
           <div className="groupDescription">{this.props.groupDetails.description}</div>
           <div className="groupFoundingDiv">

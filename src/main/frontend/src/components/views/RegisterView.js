@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { NavLink, Redirect } from "react-router-dom";
 import { setMessageAction } from "../../redux/actions";
 import Loading from "../common/Loading";
+import { gatewayAddress } from "../../consts/addresses";
 
 class RegisterView extends React.Component {
   constructor(props) {
@@ -39,7 +40,7 @@ class RegisterView extends React.Component {
       password: false
     },
     redirect: "",
-    reloading: false
+    loading: false
   }
 
   onChange(event) {
@@ -112,7 +113,7 @@ class RegisterView extends React.Component {
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ reloading: false });
+        this.setState({ loading: false });
         this.props.setMessage(message);
         throw Error(message.text);
       })
@@ -123,8 +124,8 @@ class RegisterView extends React.Component {
   onSubmit(event) {
     event.preventDefault()
 
-    this.setState({ reloading: true });
-    fetch("https://localhost:8083/gateway/users", {
+    this.setState({ loading: true });
+    fetch(gatewayAddress + "/register", {
       method: "POST",
       headers: {
         'mode': 'cors',
@@ -156,7 +157,7 @@ class RegisterView extends React.Component {
 
     return (
       <div>
-        {this.state.reloading ?
+        {this.state.loading ?
           <Loading />
           :
           null
