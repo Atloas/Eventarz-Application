@@ -150,8 +150,8 @@ class GroupDetailsView extends React.Component {
     })
       .then(this.handleFetchErrors)
       .then(() => {
-        this.props.clearGroupDetails();
         this.setState({ redirect: "/" });
+        this.props.clearGroupDetails();
       })
       .catch(error => console.log(error));
   }
@@ -170,8 +170,8 @@ class GroupDetailsView extends React.Component {
     })
       .then(this.handleFetchErrors)
       .then(() => {
-        this.props.clearGroupDetails();
         this.setState({ redirect: "/" });
+        this.props.clearGroupDetails();
       })
       .catch(error => console.log(error));
   }

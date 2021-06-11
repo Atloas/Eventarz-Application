@@ -102,7 +102,7 @@ button:hover {}
 }
 
 .buttonDanger:hover {
-  background-color: #590000;
+  background-color: #3b0000;
 }
 
 select {
@@ -234,7 +234,6 @@ nav>a {
 }
 
 .username {
-  font-size: 1.2em;
 }
 
 .groupFoundingDiv>div {
