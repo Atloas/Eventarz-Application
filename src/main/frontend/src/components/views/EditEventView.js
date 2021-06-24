@@ -124,6 +124,7 @@ class EditEventView extends React.Component {
         description: this.state.values.description,
         maxParticipants: this.state.values.maxParticipants,
         eventDate: formattedDate,
+        organizerUsername: this.props.currentUser.username
       })
     })
       .then(this.handleFetchErrors)
@@ -285,7 +286,8 @@ class EditEventView extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  eventDetails: state.eventDetails
+  eventDetails: state.eventDetails,
+  currentUser: state.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({

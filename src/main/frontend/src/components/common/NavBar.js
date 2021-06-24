@@ -7,7 +7,7 @@ class NavBar extends React.Component {
   render() {
     var bar = null;
     if (this.props.currentUser) {
-      if (this.props.currentUser.role === "USER") {
+      if (this.props.currentUser.role === "ROLE_USER") {
         bar = (
           <nav className="navBar">
             <NavLink to="/">Home</NavLink>
@@ -29,7 +29,7 @@ class NavBar extends React.Component {
             <NavLink to={"/user/" + this.props.currentUser.username}>Profile</NavLink>
           </nav>
         )
-      } else if (this.props.currentUser.role === "ADMIN") {
+      } else if (this.props.currentUser.role === "ROLE_ADMIN") {
         bar = (
           <nav className="navBar">
             <NavLink to="/findGroup">Find Group</NavLink>

@@ -49,11 +49,9 @@ class UserDetailsView extends React.Component {
     return response;
   }
 
-  // TODO: This for normal users too, just change the fetch address and hide the ban button
-
   componentDidMount() {
     var uri;
-    if (this.props.currentUser.role === "ADMIN") {
+    if (this.props.currentUser.role === "ROLE_ADMIN") {
       uri = gatewayAddress + "/admin/users/" + this.props.match.params.username
     } else {
       uri = gatewayAddress + "/users/" + this.props.match.params.username
@@ -85,7 +83,7 @@ class UserDetailsView extends React.Component {
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem("token")
       },
-      body: JSON.stringify({ banned: true })
+      body: "true"
     })
       .then(this.handleFetchErrors)
       .then(response => response.json())
@@ -107,7 +105,7 @@ class UserDetailsView extends React.Component {
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem("token")
       },
-      body: JSON.stringify({ banned: false })
+      body: "false"
     })
       .then(this.handleFetchErrors)
       .then(response => response.json())
@@ -127,7 +125,7 @@ class UserDetailsView extends React.Component {
       content = <Loading />;
     } else {
       var buttonDiv = null;
-      if (this.props.currentUser.role === "ADMIN") {
+      if (this.props.currentUser.role === "ROLE_ADMIN") {
         if (this.state.user.banned) {
           buttonDiv = (
             <div className="userButtonsDiv" >

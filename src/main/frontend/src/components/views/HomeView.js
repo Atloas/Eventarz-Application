@@ -43,8 +43,8 @@ class HomeView extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.currentUser.role === "USER") {
-      fetch(gatewayAddress + "/events?home", {
+    if (this.props.currentUser.role === "ROLE_USER") {
+      fetch(gatewayAddress + "/events?username=" + this.props.currentUser.username + "&home", {
         method: "GET",
         headers: {
           'mode': 'cors',
@@ -67,7 +67,7 @@ class HomeView extends React.Component {
     }
 
     var content = null;
-    if (this.props.currentUser.role === "USER") {
+    if (this.props.currentUser.role === "ROLE_USER") {
       if (this.state.loading) {
         content = <Loading />;
       } else {

@@ -43,7 +43,7 @@ class MyGroupsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch(gatewayAddress + "/groups", {
+    fetch(gatewayAddress + "/groups?username=" + this.props.currentUser.username, {
       method: "GET",
       headers: {
         'mode': 'cors',
@@ -54,7 +54,6 @@ class MyGroupsView extends React.Component {
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(data => {
-        // this.props.setMyGroups(data);
         this.setState({ loading: false, groups: data })
       })
       .catch(error => console.log(error));
@@ -86,11 +85,10 @@ class MyGroupsView extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  // myGroups: state.myGroups
+  currentUser: state.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({
-  // setMyGroups: myGroups => dispatch(setMyGroupsAction(myGroups)),
   setMessage: message => dispatch(setMessageAction(message))
 })
 

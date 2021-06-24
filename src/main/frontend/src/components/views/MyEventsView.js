@@ -5,6 +5,7 @@ import EventHomeList from '../event/EventHomeList';
 import { setMessageAction } from "../../redux/actions";
 import Loading from '../common/Loading';
 import { gatewayAddress } from "../../consts/addresses";
+import { putHappenedEventsInTheBack } from "../../scripts/eventDataUtils";
 
 class MyEventsView extends React.Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class MyEventsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch(gatewayAddress + "/events", {
+    fetch(gatewayAddress + "/events?username=" + this.props.currentUser.username, {
       method: "GET",
       headers: {
         'mode': 'cors',
@@ -54,9 +55,7 @@ class MyEventsView extends React.Component {
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(data => {
-        var upcomingEvents = data.filter(event => !event.happened);
-        var happenedEvents = data.filter(event => event.happened);
-        var events = upcomingEvents.concat(happenedEvents)
+        var events = putHappenedEventsInTheBack(data);
         this.setState({ loading: false, events: events });
       })
       .catch(error => console.log(error));
@@ -88,11 +87,10 @@ class MyEventsView extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  myEvents: state.myEvents
+  currentUser: state.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({
-  // setMyEvents: myEvents => dispatch(setMyEventsAction(myEvents)),
   setMessage: message => dispatch(setMessageAction(message))
 })
 

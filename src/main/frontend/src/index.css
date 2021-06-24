@@ -288,6 +288,10 @@ nav>a {
   margin: 5px;
 }
 
+.userList li {
+  padding-top: 2px
+}
+
 .createGroupForm {
   display: grid;
   grid-template-columns: 1fr auto 1fr;

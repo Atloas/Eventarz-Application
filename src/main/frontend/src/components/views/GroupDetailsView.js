@@ -9,6 +9,7 @@ import GroupEventList from "../event/GroupEventList";
 import Loading from '../common/Loading';
 import GroupMemberList from '../user/GroupMemberList';
 import { gatewayAddress } from "../../consts/addresses";
+import { putHappenedEventsInTheBack } from "../../scripts/eventDataUtils";
 
 class GroupDetailsView extends React.Component {
   constructor(props) {
@@ -55,7 +56,13 @@ class GroupDetailsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch(gatewayAddress + "/groups/" + this.props.match.params.uuid, {
+    var address = gatewayAddress;
+    if (this.props.currentUser.role === "ROLE_ADMIN") {
+      address += "/admin/groups/" + this.props.match.params.uuid;
+    } else {
+      address += "/groups/" + this.props.match.params.uuid;
+    }
+    fetch(address, {
       headers: {
         'mode': 'cors',
         'Accept': 'application/json',
@@ -118,11 +125,7 @@ class GroupDetailsView extends React.Component {
       .then(this.handleFetchErrors)
       .then(response => response.json())
       .then(data => {
-        // TODO: Duplication. Here and in eventdetailsview
-        var events = data.events;
-        var upcomingEvents = events.filter(event => !event.happened);
-        var happenedEvents = events.filter(event => event.happened);
-        var events = upcomingEvents.concat(happenedEvents);
+        var events = putHappenedEventsInTheBack(data.events);
         data.events = events;
         this.props.setGroupDetails(processGroupData(data, this.props.currentUser.username));
         this.setState({ reloading: false });
@@ -187,7 +190,7 @@ class GroupDetailsView extends React.Component {
     } else {
       var buttons = [];
 
-      if (this.props.currentUser.role === "USER") {
+      if (this.props.currentUser.role === "ROLE_USER") {
         if (this.props.groupDetails.founded) {
           buttons.push(<button key="editButton" className="buttonNormal" onClick={this.onEditClick}>Edit</button>);
           buttons.push(<button key="deleteButton" className="buttonDanger" onClick={this.onDeleteClick}>Delete</button>);
@@ -198,7 +201,7 @@ class GroupDetailsView extends React.Component {
             buttons.push(<button key="joinButton" className="buttonNormal" onClick={this.onJoinClick}>Join</button>);
           }
         }
-      } else if (this.props.currentUser.role === "ADMIN") {
+      } else if (this.props.currentUser.role === "ROLE_ADMIN") {
         buttons.push(<button key="adminDeleteButton" className="buttonDanger" onClick={this.onAdminDeleteClick}>Delete</button>);
       }
       content = (

@@ -54,13 +54,13 @@ class EventDetailsView extends React.Component {
   }
 
   componentDidMount() {
-    var address = "";
-    if (this.props.currentUser.role === "ADMIN") {
-      address = gatewayAddress + "/admin/events/";
+    var address = gatewayAddress;
+    if (this.props.currentUser.role === "ROLE_ADMIN") {
+      address += "/admin/events/" + this.props.match.params.uuid;
     } else {
-      address = gatewayAddress + "/events/";
+      address += "/events/" + this.props.match.params.uuid;
     }
-    fetch(address + this.props.match.params.uuid, {
+    fetch(address, {
       headers: {
         'mode': 'cors',
         'Accept': 'application/json',
@@ -123,7 +123,6 @@ class EventDetailsView extends React.Component {
   onEditClick(event) {
     event.preventDefault();
 
-    // TODO: load event by id in there? Like /editEvent/{uuid}??
     this.setState({ redirect: "/editEvent" });
   }
 
@@ -178,7 +177,7 @@ class EventDetailsView extends React.Component {
     } else {
       var buttons = [];
 
-      if (this.props.currentUser.role === "USER") {
+      if (this.props.currentUser.role === "ROLE_USER") {
         if (!this.props.eventDetails.happened && this.props.eventDetails.allowed) {
           if (this.props.eventDetails.joined) {
             buttons.push(<button key="leaveButton" className="buttonNormal" onClick={this.onLeaveClick}>Leave</button>);
@@ -192,7 +191,7 @@ class EventDetailsView extends React.Component {
             buttons.push(<button key="deleteButton" className="buttonDanger" onClick={this.onDeleteClick}>Delete</button>);
           }
         }
-      } else if (this.props.currentUser.role === "ADMIN") {
+      } else if (this.props.currentUser.role === "ROLE_ADMIN") {
         buttons.push(<button key="adminDeleteButton" className="buttonDanger" onClick={this.onAdminDeleteClick}>Delete</button>);
       }
       content = (

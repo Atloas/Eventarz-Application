@@ -174,9 +174,9 @@ class RegisterView extends React.Component {
               placeholder="Username"
               maxLength="16"
               value={this.state.username}
-              onChange={this.onChange}
+              onChange={(event) => { this.onChange(event); this.validateUsername(event) }}
               onFocus={this.onFocus}
-              onBlur={(event) => { this.validateUsername(event); this.onBlur(event) }}
+              onBlur={this.onBlur}
             />
           </div>
           <div className="registrationUsernameRulesDiv">
@@ -192,9 +192,9 @@ class RegisterView extends React.Component {
               placeholder="Password"
               maxLength="128"
               value={this.state.password}
-              onChange={this.onChange}
+              onChange={(event) => { this.onChange(event); this.validatePassword(event) }}
               onFocus={this.onFocus}
-              onBlur={(event) => { this.validatePassword(event); this.onBlur(event) }}
+              onBlur={this.onBlur}
             />
           </div>
           <div className="registrationPasswordRulesDiv">
@@ -210,8 +210,7 @@ class RegisterView extends React.Component {
               placeholder="Repeat password"
               maxLength="128"
               value={this.state.repeatPassword}
-              onChange={this.onChange}
-              onBlur={this.validateRepeatPassword}
+              onChange={(event) => { this.onChange(event); this.validateRepeatPassword(event) }}
             />
           </div>
           <div className="registrationSubmitButtonDiv">
@@ -226,12 +225,8 @@ class RegisterView extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.user
-})
-
 const mapDispatchToProps = dispatch => ({
   setMessage: message => dispatch(setMessageAction(message)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterView);
+export default connect(null, mapDispatchToProps)(RegisterView);

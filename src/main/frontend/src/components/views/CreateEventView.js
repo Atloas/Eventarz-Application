@@ -79,7 +79,7 @@ class CreateEventView extends React.Component {
   }
 
   componentDidMount() {
-    fetch(gatewayAddress + "/groups", {
+    fetch(gatewayAddress + "/groups?username=" + this.props.currentUser.username, {
       headers: {
         'mode': 'cors',
         'Accept': 'application/json',
@@ -158,6 +158,7 @@ class CreateEventView extends React.Component {
         maxParticipants: this.state.values.maxParticipants,
         eventDate: formattedDate,
         participate: this.state.values.participate,
+        organizerUsername: this.props.currentUser.username
       })
     })
       .then(this.handleFetchErrors)
@@ -260,9 +261,9 @@ class CreateEventView extends React.Component {
                   placeholder="Name"
                   maxLength="32"
                   value={this.state.values.name}
-                  onChange={this.onFieldChange}
+                  onChange={(event) => { this.onFieldChange(event); this.validateName(event) }}
                   onFocus={this.onFocus}
-                  onBlur={(event) => { this.validateName(event); this.onBlur(event) }}
+                  onBlur={this.onBlur}
                 />
               </div>
               <div className="eventCreateNameRulesDiv">
@@ -279,9 +280,9 @@ class CreateEventView extends React.Component {
                   maxLength="1024"
                   placeholder="Descritpion"
                   value={this.state.values.description}
-                  onChange={this.onFieldChange}
+                  onChange={(event) => { this.onFieldChange(event); this.validateDescription(event) }}
                   onFocus={this.onFocus}
-                  onBlur={(event) => { this.validateDescription(event); this.onBlur(event) }}>
+                  onBlur={this.onBlur}>
                 </textarea>
               </div>
               <div className="eventCreateDescriptionRulesDiv">
@@ -297,8 +298,7 @@ class CreateEventView extends React.Component {
                   min="1"
                   max="100"
                   value={this.state.values.maxParticipants}
-                  onChange={this.onFieldChange}
-                  onBlur={this.validateMaxParticipants}
+                  onChange={(event) => { this.onFieldChange(event); this.validateMaxParticipants(event) }}
                 />
               </div>
               <div className="eventCreateEventDatePromptDiv">
@@ -309,8 +309,7 @@ class CreateEventView extends React.Component {
                   name="eventDate"
                   type="datetime-local"
                   value={this.state.values.date}
-                  onChange={this.onFieldChange}
-                  onBlur={this.validateEventDate}
+                  onChange={(event) => { this.onFieldChange(event); this.validateEventDate(event) }}
                 />
               </div>
               <div className="eventCreateParticipateDiv">
@@ -339,8 +338,12 @@ class CreateEventView extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  currentUser: state.currentUser
+})
+
 const mapDispatchToProps = dispatch => ({
   setMessage: message => dispatch(setMessageAction(message))
 })
 
-export default connect(null, mapDispatchToProps)(CreateEventView);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateEventView);

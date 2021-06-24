@@ -7,7 +7,7 @@ class EventMemberList extends React.Component {
   render() {
 
     var userElements = [];
-    if (this.props.currentUser.role === "ADMIN") {
+    if (this.props.currentUser.role === "ROLE_ADMIN") {
       this.props.users.forEach(user => {
         userElements.push(<li className="username" key={user.username}><NavLink to={'/user/' + user.username}>{user.username}</NavLink></li>)
       });

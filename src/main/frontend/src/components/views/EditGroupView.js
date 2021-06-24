@@ -92,6 +92,7 @@ class EditGroupView extends React.Component {
       body: JSON.stringify({
         name: this.state.values.name,
         description: this.state.values.description,
+        founderUsername: this.props.currentUser.username
       })
     })
       .then(this.handleFetchErrors)
@@ -209,7 +210,8 @@ class EditGroupView extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  groupDetails: state.groupDetails
+  groupDetails: state.groupDetails,
+  currentUser: state.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -82,6 +82,7 @@ class CreateGroupView extends React.Component {
       body: JSON.stringify({
         name: this.state.values.name,
         description: this.state.values.description,
+        founderUsername: this.props.currentUser.username
       })
     })
       .then(this.handleFetchErrors)
@@ -157,9 +158,9 @@ class CreateGroupView extends React.Component {
               placeholder="Name"
               maxLength="32"
               value={this.state.values.name}
-              onChange={this.onChange}
+              onChange={(event) => { this.onChange(event); this.validateName(event) }}
               onFocus={this.onFocus}
-              onBlur={(event) => { this.validateName(event); this.onBlur(event) }}
+              onBlur={this.onBlur}
             />
           </div>
           <div className="groupCreateNameRulesDiv">
@@ -176,9 +177,9 @@ class CreateGroupView extends React.Component {
               placeholder="Description"
               maxLength="1024"
               value={this.state.values.description}
-              onChange={this.onChange}
+              onChange={(event) => { this.onChange(event); this.validateDescription(event) }}
               onFocus={this.onFocus}
-              onBlur={(event) => { this.validateDescription(event); this.onBlur(event) }}>
+              onBlur={this.onBlur}>
             </textarea>
           </div>
           <div className="groupCreateDescriptionRulesDiv">
@@ -193,8 +194,12 @@ class CreateGroupView extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  currentUser: state.currentUser
+})
+
 const mapDispatchToProps = dispatch => ({
   setMessage: message => dispatch(setMessageAction(message))
 })
 
-export default connect(null, mapDispatchToProps)(CreateGroupView);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateGroupView);
