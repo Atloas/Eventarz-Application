@@ -57,7 +57,7 @@ class App extends React.Component {
         })
         .catch(error => {
           localStorage.removeItem("token");
-          console.log(error);
+          this.setState({ loading: false });
         });
     }
   }

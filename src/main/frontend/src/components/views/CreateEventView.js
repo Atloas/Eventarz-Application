@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import { eventDateTimeStorageFormat } from '../../consts/dateFormats';
 import Loading from '../common/Loading';
 import { gatewayAddress } from "../../consts/addresses";
+import is from "is_js";
 
 class CreateEventView extends React.Component {
   constructor(props) {
@@ -33,6 +34,8 @@ class CreateEventView extends React.Component {
       maxParticipants: 1,
       eventDate: "",
       participate: false,
+      firefoxEventDate: "",
+      firefoxEventTime: ""
     },
     validity: {
       name: false,
@@ -51,7 +54,8 @@ class CreateEventView extends React.Component {
       description: false,
     },
     loading: true,
-    redirect: ""
+    redirect: "",
+    firefox: false
   }
 
   handleFetchErrors(response) {
@@ -79,6 +83,7 @@ class CreateEventView extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({ firefox: is.firefox() })
     fetch(gatewayAddress + "/groups?username=" + this.props.currentUser.username, {
       headers: {
         'mode': 'cors',
@@ -117,11 +122,18 @@ class CreateEventView extends React.Component {
     this.setState({ values: { ...this.state.values, groupUuid: event.target.value } });
   }
 
-  onFieldChange(event) {
+  onFieldChange(event, validator) {
+    if (this.state.firefox && (event.target.name == "firefoxEventDate" || event.target.name == "firefoxEventTime")) {
+      this.setState({
+        values: { ...this.state.values, [event.target.name]: event.target.value },
+        touched: { ...this.state.touched, eventDate: true }
+      }, validator);
+      return;
+    }
     this.setState({
       values: { ...this.state.values, [event.target.name]: event.target.value },
       touched: { ...this.state.touched, [event.target.name]: true }
-    });
+    }, validator);
   }
 
   onCheckboxChange(event) {
@@ -139,7 +151,12 @@ class CreateEventView extends React.Component {
   onSubmit(event) {
     event.preventDefault()
 
-    var date = DateTime.fromISO(this.state.values.eventDate);
+    var date;
+    if (this.state.firefox) {
+      date = DateTime.fromISO(this.state.values.firefoxEventDate + "T" + this.state.values.firefoxEventTime);
+    } else {
+      date = DateTime.fromISO(this.state.values.eventDate);
+    }
     var formattedDate = date.toFormat(eventDateTimeStorageFormat);
 
     this.setState({ loading: true });
@@ -173,7 +190,7 @@ class CreateEventView extends React.Component {
     return this.state.validity.name && this.state.validity.description && this.state.validity.maxParticipants && this.state.validity.eventDate
   }
 
-  validateName(event) {
+  validateName() {
     var name = this.state.values.name;
     var found = name.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
     if (name.length < 5 || found != null) {
@@ -184,7 +201,7 @@ class CreateEventView extends React.Component {
     }
   }
 
-  validateDescription(event) {
+  validateDescription() {
     var found = this.state.values.description.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
     if (found != null) {
       this.setState({ validity: { ...this.state.validity, description: false } });
@@ -194,7 +211,7 @@ class CreateEventView extends React.Component {
     }
   }
 
-  validateMaxParticipants(event) {
+  validateMaxParticipants() {
     var value = this.state.values.maxParticipants;
     if (value < 1 || value > 100) {
       this.setState({ validity: { ...this.state.validity, maxParticipants: false } });
@@ -204,14 +221,22 @@ class CreateEventView extends React.Component {
     }
   }
 
-  validateEventDate(event) {
-    var eventDateString = this.state.values.eventDate;
+  validateEventDate() {
+    var eventDateString = "";
+    if (this.state.firefox) {
+      if (this.state.values.firefoxEventDate == "" || this.state.values.firefoxEventTime == "") {
+        this.setState({ validity: { ...this.state.validity, eventDate: false } });
+      } else {
+        eventDateString = this.state.values.firefoxEventDate + "T" + this.state.values.firefoxEventTime;
+      }
+    } else {
+      eventDateString = this.state.values.eventDate;
+    }
     var eventDate = new Date(eventDateString);
     var currentDate = new Date();
     if (currentDate > eventDate) {
       this.setState({ validity: { ...this.state.validity, eventDate: false } });
-    }
-    else {
+    } else {
       this.setState({ validity: { ...this.state.validity, eventDate: true } });
     }
   }
@@ -230,6 +255,36 @@ class CreateEventView extends React.Component {
       )
     } else {
       var buttonDisabled = !this.validate();
+      var dateInput = null;
+      if (this.state.firefox) {
+        dateInput = (
+          <div className="eventCreateEventDateFieldDiv">
+            <input className={"eventCreateEventDateField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+              name="firefoxEventDate"
+              type="date"
+              value={this.state.values.date}
+              onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+            />
+            <input className={"eventCreateEventTimeField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+              name="firefoxEventTime"
+              type="time"
+              value={this.state.values.date}
+              onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+            />
+          </div>
+        )
+      } else {
+        dateInput = (
+          <div className="eventCreateEventDateFieldDiv">
+            <input className={"eventCreateEventDateField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+              name="eventDate"
+              type="datetime-local"
+              value={this.state.values.date}
+              onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+            />
+          </div>
+        )
+      }
       if (this.state.groups) {
         content = (
           <div>
@@ -261,7 +316,7 @@ class CreateEventView extends React.Component {
                   placeholder="Name"
                   maxLength="32"
                   value={this.state.values.name}
-                  onChange={(event) => { this.onFieldChange(event); this.validateName(event) }}
+                  onChange={(event) => { this.onFieldChange(event, this.validateName); }}
                   onFocus={this.onFocus}
                   onBlur={this.onBlur}
                 />
@@ -280,7 +335,7 @@ class CreateEventView extends React.Component {
                   maxLength="1024"
                   placeholder="Descritpion"
                   value={this.state.values.description}
-                  onChange={(event) => { this.onFieldChange(event); this.validateDescription(event) }}
+                  onChange={(event) => { this.onFieldChange(event, this.validateDescription); }}
                   onFocus={this.onFocus}
                   onBlur={this.onBlur}>
                 </textarea>
@@ -298,20 +353,13 @@ class CreateEventView extends React.Component {
                   min="1"
                   max="100"
                   value={this.state.values.maxParticipants}
-                  onChange={(event) => { this.onFieldChange(event); this.validateMaxParticipants(event) }}
+                  onChange={(event) => { this.onFieldChange(event, this.validateMaxParticipants); }}
                 />
               </div>
               <div className="eventCreateEventDatePromptDiv">
                 <label className="eventCreateEventDatePrompt" htmlFor="eventCreateEventDateField">Date: </label>
               </div>
-              <div className="eventCreateEventDateFieldDiv">
-                <input className={"eventCreateEventDateField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
-                  name="eventDate"
-                  type="datetime-local"
-                  value={this.state.values.date}
-                  onChange={(event) => { this.onFieldChange(event); this.validateEventDate(event) }}
-                />
-              </div>
+              {dateInput}
               <div className="eventCreateParticipateDiv">
                 <label htmlFor="eventCreateParticipateField">Participate? </label>
                 <input className="eventCreateParticipateField" id="eventCreateParticipateField"

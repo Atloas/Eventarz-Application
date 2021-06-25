@@ -35,9 +35,10 @@ class FindEventView extends React.Component {
           text: ""
         };
         switch (body.status) {
-          // case 403:
-          //   // TODO token expiration
-          //   break;
+          case 401:
+            message.text = body.message;
+            this.props.logout();
+            break;
           default:
             message.text = "Something went wrong!";
             break;

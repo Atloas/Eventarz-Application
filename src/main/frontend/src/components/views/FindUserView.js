@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { setFoundUsersAction, setMessageAction } from '../../redux/actions';
+import { logoutAction, setFoundUsersAction, setMessageAction } from '../../redux/actions';
 import EventParticipantList from '../user/EventParticipantList';
 import Loading from '../common/Loading';
 import { gatewayAddress } from "../../consts/addresses";
@@ -35,15 +35,16 @@ class FindUserView extends React.Component {
           text: ""
         };
         switch (body.status) {
-          // case 403:
-          //   // TODO token expiration
-          //   break;
+          case 401:
+            message.text = body.message;
+            this.props.logout();
+            break;
           default:
             message.text = "Something went wrong!";
             break;
         }
-        this.setState({ loading: false });
         this.props.setMessage(message);
+        this.setState({ loading: false });
         throw Error(message.text);
       })
     }
@@ -134,7 +135,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setFoundUsers: redirect => dispatch(setFoundUsersAction(redirect)),
-  setMessage: message => dispatch(setMessageAction(message))
+  setMessage: message => dispatch(setMessageAction(message)),
+  logout: () => dispatch(logoutAction())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FindUserView);

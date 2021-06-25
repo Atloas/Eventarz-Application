@@ -37,9 +37,10 @@ class GroupDetailsView extends React.Component {
           text: ""
         };
         switch (body.status) {
-          // case 403:
-          //   // TODO token expiration
-          //   break;
+          case 401:
+            message.text = body.message;
+            this.props.logout();
+            break;
           case 404:
             message.text = body.message;
             break;
@@ -75,7 +76,7 @@ class GroupDetailsView extends React.Component {
         var events = data.events;
         var upcomingEvents = events.filter(event => !event.happened);
         var happenedEvents = events.filter(event => event.happened);
-        var events = upcomingEvents.concat(happenedEvents);
+        events = upcomingEvents.concat(happenedEvents);
         data.events = events;
         this.props.setGroupDetails(processGroupData(data, this.props.currentUser.username));
         this.setState({ loading: false });
@@ -102,7 +103,7 @@ class GroupDetailsView extends React.Component {
         var events = data.events;
         var upcomingEvents = events.filter(event => !event.happened);
         var happenedEvents = events.filter(event => event.happened);
-        var events = upcomingEvents.concat(happenedEvents);
+        events = upcomingEvents.concat(happenedEvents);
         data.events = events;
         this.props.setGroupDetails(processGroupData(data, this.props.currentUser.username));
         this.setState({ reloading: false });
