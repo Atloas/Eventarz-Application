@@ -11,13 +11,13 @@ class MyGroupsView extends React.Component {
     super(props);
 
     this.handleFetchErrors = this.handleFetchErrors.bind(this);
+    this.state = {
+      groups: [],
+      loading: true,
+      redirect: ""
+    }
   }
 
-  state = {
-    groups: [],
-    loading: true,
-    redirect: ""
-  }
 
   handleFetchErrors(response) {
     if (!response.ok) {

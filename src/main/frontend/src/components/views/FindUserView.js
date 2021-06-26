@@ -15,17 +15,17 @@ class FindUserView extends React.Component {
     this.onFocus = this.onFocus.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  state = {
-    username: "",
-    searched: false,
-    loading: false,
-    redirect: "",
-    rules: {
-      name: false
+    this.state = {
+      username: "",
+      searched: false,
+      loading: false,
+      redirect: "",
+      rules: {
+        name: false
+      }
     }
   }
+
 
   handleFetchErrors(response) {
     if (!response.ok) {

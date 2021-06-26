@@ -14,14 +14,14 @@ class UserDetailsView extends React.Component {
     this.handleFetchErrors = this.handleFetchErrors.bind(this);
     this.onBanClick = this.onBanClick.bind(this);
     this.onUnbanClick = this.onUnbanClick.bind(this);
+    this.state = {
+      user: null,
+      loading: true,
+      reloading: false,
+      redirect: ""
+    }
   }
 
-  state = {
-    user: null,
-    loading: true,
-    reloading: false,
-    redirect: ""
-  }
 
   handleFetchErrors(response) {
     if (!response.ok) {

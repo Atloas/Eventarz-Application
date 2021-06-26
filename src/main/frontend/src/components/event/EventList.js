@@ -7,7 +7,7 @@ class EventList extends React.Component {
     var eventObjects = [];
     if (this.props.events.length) {
       this.props.events.forEach(event => {
-        eventObjects.push(<EventHome event={event} key={event.uuid}/>)
+        eventObjects.push(<EventHome event={event} key={event.uuid} />)
       });
     }
 

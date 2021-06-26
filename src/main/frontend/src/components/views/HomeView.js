@@ -5,19 +5,20 @@ import { setMessageAction } from '../../redux/actions';
 import EventHomeList from '../event/EventHomeList';
 import Loading from '../common/Loading';
 import { gatewayAddress } from "../../consts/addresses";
+import { putHappenedEventsInTheBack } from "../../scripts/eventDataUtils";
 
 class HomeView extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleFetchErrors = this.handleFetchErrors.bind(this);
+    this.state = {
+      events: [],
+      loading: true,
+      redirect: ""
+    }
   }
 
-  state = {
-    events: [],
-    loading: true,
-    redirect: ""
-  }
 
   handleFetchErrors(response) {
     if (!response.ok) {
@@ -56,6 +57,7 @@ class HomeView extends React.Component {
         .then(this.handleFetchErrors)
         .then(response => response.json())
         .then(data => {
+          data = putHappenedEventsInTheBack(data);
           this.setState({ loading: false, events: data })
         })
         .catch(error => console.log(error));

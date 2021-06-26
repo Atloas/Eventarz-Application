@@ -12,13 +12,13 @@ class MyEventsView extends React.Component {
     super(props);
 
     this.handleFetchErrors = this.handleFetchErrors.bind(this);
+    this.state = {
+      events: [],
+      loading: true,
+      redirect: ""
+    }
   }
 
-  state = {
-    events: [],
-    loading: true,
-    redirect: ""
-  }
 
   handleFetchErrors(response) {
     if (!response.ok) {

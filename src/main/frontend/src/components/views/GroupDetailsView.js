@@ -21,13 +21,13 @@ class GroupDetailsView extends React.Component {
     this.onJoinClick = this.onJoinClick.bind(this);
     this.onLeaveClick = this.onLeaveClick.bind(this);
     this.onEditClick = this.onEditClick.bind(this);
+    this.state = {
+      loading: true,
+      reloading: false,
+      redirect: ""
+    }
   }
 
-  state = {
-    loading: true,
-    reloading: false,
-    redirect: ""
-  }
 
   handleFetchErrors(response) {
     if (!response.ok) {

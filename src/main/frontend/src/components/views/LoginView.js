@@ -11,13 +11,13 @@ class LoginView extends React.Component {
 
     this.handleFetchErrors = this.handleFetchErrors.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      username: "",
+      password: "",
+      loading: false
+    }
   }
 
-  state = {
-    username: "",
-    password: "",
-    loading: false
-  }
 
   handleFormChange = event => {
     this.setState({

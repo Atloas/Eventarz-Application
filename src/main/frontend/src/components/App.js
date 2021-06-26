@@ -25,8 +25,12 @@ import { gatewayAddress } from "../consts/addresses";
 
 class App extends React.Component {
 
-  state = {
-    loading: false
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: false
+    }
   }
 
   handleFetchErrors(response) {

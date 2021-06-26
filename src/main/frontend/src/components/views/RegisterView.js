@@ -17,31 +17,31 @@ class RegisterView extends React.Component {
     this.validateUsername = this.validateUsername.bind(this);
     this.validatePassword = this.validatePassword.bind(this);
     this.validateRepeatPassword = this.validateRepeatPassword.bind(this);
+    this.state = {
+      values: {
+        username: "",
+        password: "",
+        repeatPassword: ""
+      },
+      validity: {
+        username: false,
+        password: false,
+        repeatPassword: false
+      },
+      touched: {
+        username: false,
+        password: false,
+        repeatPassword: false
+      },
+      rules: {
+        username: false,
+        password: false
+      },
+      redirect: "",
+      loading: false
+    }
   }
 
-  state = {
-    values: {
-      username: "",
-      password: "",
-      repeatPassword: ""
-    },
-    validity: {
-      username: false,
-      password: false,
-      repeatPassword: false
-    },
-    touched: {
-      username: false,
-      password: false,
-      repeatPassword: false
-    },
-    rules: {
-      username: false,
-      password: false
-    },
-    redirect: "",
-    loading: false
-  }
 
   onChange(event) {
     this.setState({

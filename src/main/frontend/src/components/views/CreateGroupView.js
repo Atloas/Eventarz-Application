@@ -16,29 +16,29 @@ class CreateGroupView extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onFocus = this.onFocus.bind(this);
+    this.state = {
+      groups: [],
+      values: {
+        name: "",
+        description: ""
+      },
+      validity: {
+        name: false,
+        description: true
+      },
+      touched: {
+        name: false,
+        description: false
+      },
+      rules: {
+        name: false,
+        description: false,
+      },
+      redirect: "",
+      loading: false
+    }
   }
 
-  state = {
-    groups: [],
-    values: {
-      name: "",
-      description: ""
-    },
-    validity: {
-      name: false,
-      description: true
-    },
-    touched: {
-      name: false,
-      description: false
-    },
-    rules: {
-      name: false,
-      description: false,
-    },
-    redirect: "",
-    loading: false
-  }
 
   handleFetchErrors(response) {
     if (!response.ok) {
@@ -94,11 +94,11 @@ class CreateGroupView extends React.Component {
       .catch(error => console.log(error));
   }
 
-  onChange(event) {
+  onChange(event, validator) {
     this.setState({
       values: { ...this.state.values, [event.target.name]: event.target.value },
       touched: { ...this.state.touched, [event.target.name]: true }
-    });
+    }, validator);
   }
 
   onFocus(event) {
@@ -113,7 +113,7 @@ class CreateGroupView extends React.Component {
     return this.state.validity.name && this.state.validity.description;
   }
 
-  validateName(event) {
+  validateName() {
     var name = this.state.values.name;
     var found = name.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
     if (name.length < 5 || found != null) {
@@ -124,7 +124,7 @@ class CreateGroupView extends React.Component {
     }
   }
 
-  validateDescription(event) {
+  validateDescription() {
     var found = this.state.values.description.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
     if (found != null) {
       this.setState({ validity: { ...this.state.validity, description: false } });
@@ -159,7 +159,7 @@ class CreateGroupView extends React.Component {
               placeholder="Name"
               maxLength="32"
               value={this.state.values.name}
-              onChange={(event) => { this.onChange(event); this.validateName(event) }}
+              onChange={(event) => { this.onChange(event, this.validateName) }}
               onFocus={this.onFocus}
               onBlur={this.onBlur}
             />
@@ -178,9 +178,10 @@ class CreateGroupView extends React.Component {
               placeholder="Description"
               maxLength="1024"
               value={this.state.values.description}
-              onChange={(event) => { this.onChange(event); this.validateDescription(event) }}
+              onChange={(event) => { this.onChange(event, this.validateDescription) }}
               onFocus={this.onFocus}
-              onBlur={this.onBlur}>
+              onBlur={this.onBlur}
+            >
             </textarea>
           </div>
           <div className="groupCreateDescriptionRulesDiv">

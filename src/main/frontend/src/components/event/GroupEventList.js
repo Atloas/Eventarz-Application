@@ -7,7 +7,7 @@ class GroupEventList extends React.Component {
     var eventObjects = [];
     if (this.props.events.length) {
       this.props.events.forEach(event => {
-        eventObjects.push(<GroupEvent event={event} key={event.uuid}/>)
+        eventObjects.push(<GroupEvent event={event} key={event.uuid} />)
       });
     }
 

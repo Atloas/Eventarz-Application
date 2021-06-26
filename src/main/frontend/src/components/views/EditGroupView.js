@@ -17,24 +17,24 @@ class EditGroupView extends React.Component {
     this.onCancelClick = this.onCancelClick.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onFocus = this.onFocus.bind(this);
+    this.state = {
+      groupName: "",
+      values: {
+        name: "",
+        description: ""
+      },
+      validity: {
+        name: true,
+        description: true
+      },
+      rules: {
+        name: false,
+        description: false,
+      },
+      redirect: ""
+    }
   }
 
-  state = {
-    groupName: "",
-    values: {
-      name: "",
-      description: ""
-    },
-    validity: {
-      name: true,
-      description: true
-    },
-    rules: {
-      name: false,
-      description: false,
-    },
-    redirect: ""
-  }
 
   componentDidMount() {
     if (!this.props.groupDetails) {
@@ -108,10 +108,10 @@ class EditGroupView extends React.Component {
     this.setState({ redirect: "/group/" + this.props.groupDetails.uuid })
   }
 
-  onChange(event) {
+  onChange(event, validator) {
     this.setState({
       values: { ...this.state.values, [event.target.name]: event.target.value },
-    });
+    }, validator);
   }
 
   onFocus(event) {
@@ -126,7 +126,7 @@ class EditGroupView extends React.Component {
     return this.state.validity.name && this.state.validity.description;
   }
 
-  validateName(event) {
+  validateName() {
     var name = this.state.values.name;
     var found = name.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
     if (name.length < 5 || found != null) {
@@ -137,7 +137,7 @@ class EditGroupView extends React.Component {
     }
   }
 
-  validateDescription(event) {
+  validateDescription() {
     var found = this.state.values.description.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
     if (found != null) {
       this.setState({ validity: { ...this.state.validity, description: false } });
@@ -174,9 +174,9 @@ class EditGroupView extends React.Component {
               type="text"
               maxLength="64"
               value={this.state.values.name}
-              onChange={this.onChange}
+              onChange={(event) => { this.onChange(event, this.validateName) }}
               onFocus={this.onFocus}
-              onBlur={(event) => { this.validateName(event); this.onBlur(event) }}
+              onBlur={this.onBlur}
             />
           </div>
           <div className="editGroupNameRulesDiv">
@@ -192,9 +192,10 @@ class EditGroupView extends React.Component {
               rows="5"
               maxLength="1024"
               value={this.state.values.description}
-              onChange={this.onChange}
+              onChange={(event) => { this.onChange(event, this.validateDescription) }}
               onFocus={this.onFocus}
-              onBlur={(event) => { this.validateDescription(event); this.onBlur(event) }}>
+              onBlur={this.onBlur}
+            >
             </textarea>
           </div>
           <div className="editGroupDescriptionRulesDiv">

@@ -23,40 +23,40 @@ class CreateEventView extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onFocus = this.onFocus.bind(this);
+    this.state = {
+      groups: [],
+      values: {
+        groupUuid: "",
+        name: "",
+        description: "",
+        maxParticipants: 1,
+        eventDate: "",
+        participate: false,
+        firefoxEventDate: "",
+        firefoxEventTime: ""
+      },
+      validity: {
+        name: false,
+        description: true,
+        maxParticipants: true,
+        eventDate: false
+      },
+      touched: {
+        name: false,
+        description: false,
+        maxParticipants: false,
+        eventDate: false
+      },
+      rules: {
+        name: false,
+        description: false,
+      },
+      loading: true,
+      redirect: "",
+      firefox: is.firefox()
+    }
   }
 
-  state = {
-    groups: [],
-    values: {
-      groupUuid: "",
-      name: "",
-      description: "",
-      maxParticipants: 1,
-      eventDate: "",
-      participate: false,
-      firefoxEventDate: "",
-      firefoxEventTime: ""
-    },
-    validity: {
-      name: false,
-      description: true,
-      maxParticipants: true,
-      eventDate: false
-    },
-    touched: {
-      name: false,
-      description: false,
-      maxParticipants: false,
-      eventDate: false
-    },
-    rules: {
-      name: false,
-      description: false,
-    },
-    loading: true,
-    redirect: "",
-    firefox: false
-  }
 
   handleFetchErrors(response) {
     if (!response.ok) {
@@ -83,7 +83,6 @@ class CreateEventView extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ firefox: is.firefox() })
     fetch(gatewayAddress + "/groups?username=" + this.props.currentUser.username, {
       headers: {
         'mode': 'cors',
@@ -123,17 +122,23 @@ class CreateEventView extends React.Component {
   }
 
   onFieldChange(event, validator) {
-    if (this.state.firefox && (event.target.name == "firefoxEventDate" || event.target.name == "firefoxEventTime")) {
-      this.setState({
-        values: { ...this.state.values, [event.target.name]: event.target.value },
-        touched: { ...this.state.touched, eventDate: true }
-      }, validator);
-      return;
+    if (this.state.firefox && (event.target.name === "firefoxEventDate" || event.target.name === "firefoxEventTime")) {
+      this.setState(
+        {
+          values: { ...this.state.values, [event.target.name]: event.target.value },
+          touched: { ...this.state.touched, eventDate: true }
+        },
+        validator
+      );
+    } else {
+      this.setState(
+        {
+          values: { ...this.state.values, [event.target.name]: event.target.value },
+          touched: { ...this.state.touched, [event.target.name]: true }
+        },
+        validator
+      );
     }
-    this.setState({
-      values: { ...this.state.values, [event.target.name]: event.target.value },
-      touched: { ...this.state.touched, [event.target.name]: true }
-    }, validator);
   }
 
   onCheckboxChange(event) {
@@ -224,8 +229,9 @@ class CreateEventView extends React.Component {
   validateEventDate() {
     var eventDateString = "";
     if (this.state.firefox) {
-      if (this.state.values.firefoxEventDate == "" || this.state.values.firefoxEventTime == "") {
+      if (this.state.values.firefoxEventDate === "" || this.state.values.firefoxEventTime === "") {
         this.setState({ validity: { ...this.state.validity, eventDate: false } });
+        return;
       } else {
         eventDateString = this.state.values.firefoxEventDate + "T" + this.state.values.firefoxEventTime;
       }
@@ -254,38 +260,38 @@ class CreateEventView extends React.Component {
         <div>You need to join a group before you can create an Event!</div>
       )
     } else {
-      var buttonDisabled = !this.validate();
-      var dateInput = null;
-      if (this.state.firefox) {
-        dateInput = (
-          <div className="eventCreateEventDateFieldDiv">
-            <input className={"eventCreateEventDateField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
-              name="firefoxEventDate"
-              type="date"
-              value={this.state.values.date}
-              onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
-            />
-            <input className={"eventCreateEventTimeField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
-              name="firefoxEventTime"
-              type="time"
-              value={this.state.values.date}
-              onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
-            />
-          </div>
-        )
-      } else {
-        dateInput = (
-          <div className="eventCreateEventDateFieldDiv">
-            <input className={"eventCreateEventDateField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
-              name="eventDate"
-              type="datetime-local"
-              value={this.state.values.date}
-              onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
-            />
-          </div>
-        )
-      }
       if (this.state.groups) {
+        var buttonDisabled = !this.validate();
+        var dateInput = null;
+        if (this.state.firefox) {
+          dateInput = (
+            <div className="eventCreateEventDateFieldDiv">
+              <input className={"eventCreateEventDateField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+                name="firefoxEventDate"
+                type="date"
+                value={this.state.values.firefoxEventDate}
+                onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+              />
+              <input className={"eventCreateEventTimeField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+                name="firefoxEventTime"
+                type="time"
+                value={this.state.values.firefoxEventTime}
+                onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+              />
+            </div>
+          )
+        } else {
+          dateInput = (
+            <div className="eventCreateEventDateFieldDiv">
+              <input className={"eventCreateEventDateField " + (this.state.touched.eventDate && !this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+                name="eventDate"
+                type="datetime-local"
+                value={this.state.values.eventDate}
+                onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+              />
+            </div>
+          )
+        }
         content = (
           <div>
             {this.state.loading ?
@@ -337,7 +343,8 @@ class CreateEventView extends React.Component {
                   value={this.state.values.description}
                   onChange={(event) => { this.onFieldChange(event, this.validateDescription); }}
                   onFocus={this.onFocus}
-                  onBlur={this.onBlur}>
+                  onBlur={this.onBlur}
+                >
                 </textarea>
               </div>
               <div className="eventCreateDescriptionRulesDiv">

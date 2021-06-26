@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import { eventDateTimeStorageFormat, eventDateTimeInputFormat } from '../../consts/dateFormats';
 import Loading from '../common/Loading';
 import { gatewayAddress } from "../../consts/addresses";
+import is from "is_js";
 
 class EditEventView extends React.Component {
   constructor(props) {
@@ -21,29 +22,32 @@ class EditEventView extends React.Component {
     this.onCancelClick = this.onCancelClick.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onFocus = this.onFocus.bind(this);
+    this.state = {
+      eventName: "",
+      values: {
+        name: "",
+        description: "",
+        maxParticipants: 1,
+        eventDate: "",
+        firefoxEventDate: "",
+        firefoxEventTime: ""
+      },
+      validity: {
+        name: true,
+        description: true,
+        maxParticipants: true,
+        eventDate: true
+      },
+      rules: {
+        name: false,
+        description: false,
+      },
+      redirect: "",
+      loading: false,
+      firefox: is.firefox()
+    }
   }
 
-  state = {
-    eventName: "",
-    values: {
-      name: "",
-      description: "",
-      maxParticipants: 1,
-      eventDate: "",
-    },
-    validity: {
-      name: true,
-      description: true,
-      maxParticipants: true,
-      eventDate: true
-    },
-    rules: {
-      name: false,
-      description: false,
-    },
-    redirect: "",
-    loading: false
-  }
 
   handleFetchErrors(response) {
     if (!response.ok) {
@@ -77,23 +81,48 @@ class EditEventView extends React.Component {
     if (!this.props.eventDetails) {
       this.setState({ redirect: "/" });
     } else {
+      var eventDateString = DateTime.fromFormat(this.props.eventDetails.eventDate, eventDateTimeStorageFormat).toFormat(eventDateTimeInputFormat);
+      var eventDate;
+      if (this.state.firefox) {
+        var strings = eventDateString.split("T");
+        eventDate = {
+          firefoxEventDate: strings[0],
+          firefoxEventTime: strings[1]
+        }
+      } else {
+        eventDate = { eventDate: eventDateString };
+      }
       this.setState({
         eventName: this.props.eventDetails.name,
         values: {
+          ...this.state.values,
           name: this.props.eventDetails.name,
           description: this.props.eventDetails.description,
           maxParticipants: this.props.eventDetails.maxParticipants,
-          // Giving up on this ever displaying properly
-          eventDate: DateTime.fromFormat(this.props.eventDetails.eventDate, eventDateTimeStorageFormat).toFormat(eventDateTimeInputFormat)
+          ...eventDate
         }
       })
     }
   }
 
-  onFieldChange(event) {
-    this.setState({
-      values: { ...this.state.values, [event.target.name]: event.target.value },
-    });
+  onFieldChange(event, validator) {
+    if (this.state.firefox && (event.target.name === "firefoxEventDate" || event.target.name === "firefoxEventTime")) {
+      var value;
+      if (event.target.value === undefined) {
+        value = "";
+      } else {
+        value = event.target.value;
+      }
+      this.setState(
+        { values: { ...this.state.values, [event.target.name]: value } },
+        validator
+      );
+    } else {
+      this.setState(
+        { values: { ...this.state.values, [event.target.name]: event.target.value } },
+        validator
+      );
+    }
   }
 
   onFocus(event) {
@@ -107,7 +136,12 @@ class EditEventView extends React.Component {
   onSubmit(event) {
     event.preventDefault()
 
-    var date = DateTime.fromISO(this.state.values.eventDate);
+    var date;
+    if (this.state.firefox) {
+      date = DateTime.fromISO(this.state.values.firefoxEventDate + "T" + this.state.values.firefoxEventTime);
+    } else {
+      date = DateTime.fromISO(this.state.values.eventDate);
+    }
     var formattedDate = date.toFormat(eventDateTimeStorageFormat);
 
     this.setState({ loading: true });
@@ -144,7 +178,7 @@ class EditEventView extends React.Component {
     return this.state.validity.name && this.state.validity.description && this.state.validity.maxParticipants && this.state.validity.eventDate
   }
 
-  validateName(event) {
+  validateName() {
     var name = this.state.values.name;
     var found = name.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
     if (name.length < 5 || found != null) {
@@ -155,7 +189,7 @@ class EditEventView extends React.Component {
     }
   }
 
-  validateDescription(event) {
+  validateDescription() {
     var found = this.state.values.description.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
     if (found != null) {
       this.setState({ validity: { ...this.state.validity, description: false } });
@@ -165,7 +199,7 @@ class EditEventView extends React.Component {
     }
   }
 
-  validateMaxParticipants(event) {
+  validateMaxParticipants() {
     var value = this.state.values.maxParticipants;
     if (value < 1 || value > 100) {
       this.setState({ validity: { ...this.state.validity, maxParticipants: false } });
@@ -175,14 +209,23 @@ class EditEventView extends React.Component {
     }
   }
 
-  validateEventDate(event) {
-    var eventDateString = this.state.values.eventDate;
+  validateEventDate() {
+    var eventDateString = "";
+    if (this.state.firefox) {
+      if (this.state.values.firefoxEventDate === "" || this.state.values.firefoxEventTime === "") {
+        this.setState({ validity: { ...this.state.validity, eventDate: false } });
+        return;
+      } else {
+        eventDateString = this.state.values.firefoxEventDate + "T" + this.state.values.firefoxEventTime;
+      }
+    } else {
+      eventDateString = this.state.values.eventDate;
+    }
     var eventDate = new Date(eventDateString);
     var currentDate = new Date();
     if (currentDate > eventDate) {
       this.setState({ validity: { ...this.state.validity, eventDate: false } });
-    }
-    else {
+    } else {
       this.setState({ validity: { ...this.state.validity, eventDate: true } });
     }
   }
@@ -198,6 +241,36 @@ class EditEventView extends React.Component {
 
     var content = null;
     var buttonDisabled = !this.validate();
+    var dateInput = null;
+    if (this.state.firefox) {
+      dateInput = (
+        <div className="eventCreateEventDateFieldDiv">
+          <input className={"eventCreateEventDateField " + (!this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+            name="firefoxEventDate"
+            type="date"
+            value={this.state.values.firefoxEventDate}
+            onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+          />
+          <input className={"eventCreateEventTimeField " + (!this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+            name="firefoxEventTime"
+            type="time"
+            value={this.state.values.firefoxEventTime}
+            onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+          />
+        </div>
+      )
+    } else {
+      dateInput = (
+        <div className="eventCreateEventDateFieldDiv">
+          <input className={"eventCreateEventDateField " + (!this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
+            name="eventDate"
+            type="datetime-local"
+            value={this.state.values.eventDate}
+            onChange={(event) => { this.onFieldChange(event, this.validateEventDate); }}
+          />
+        </div>
+      )
+    }
     content = (
       <div>
         {this.state.loading ?
@@ -216,9 +289,9 @@ class EditEventView extends React.Component {
               type="text"
               maxLength="64"
               value={this.state.values.name}
-              onChange={this.onFieldChange}
+              onChange={(event) => { this.onFieldChange(event, this.validateName); }}
               onFocus={this.onFocus}
-              onBlur={(event) => { this.validateName(event); this.onBlur(event) }}
+              onBlur={this.onBlur}
             />
           </div>
           <div className="editEventNameRulesDiv">
@@ -234,9 +307,10 @@ class EditEventView extends React.Component {
               rows="5"
               maxLength="1024"
               value={this.state.values.description}
-              onChange={this.onFieldChange}
+              onChange={(event) => { this.onFieldChange(event, this.validateDescription); }}
               onFocus={this.onFocus}
-              onBlur={(event) => { this.validateDescription(event); this.onBlur(event) }}>
+              onBlur={this.onBlur}
+            >
             </textarea>
           </div>
           <div className="editEventDescriptionRulesDiv">
@@ -258,22 +332,13 @@ class EditEventView extends React.Component {
               min="1"
               max="100"
               value={this.state.values.maxParticipants}
-              onChange={this.onFieldChange}
-              onBlur={this.validateMaxParticipants}
+              onChange={(event) => { this.onFieldChange(event, this.validateMaxParticipants); }}
             />
           </div>
           <div className="editEventEventDatePromptDiv">
             <label className="editEventEventDatePrompt" htmlFor="editEventEventDateField">Date: </label>
           </div>
-          <div className="editEventEventDateFieldDiv">
-            <input className={"eventCreateEventDateField " + (!this.state.validity.eventDate ? "invalidInput" : "")} id="eventCreateEventDateField"
-              name="eventDate"
-              type="datetime-local"
-              value={this.state.values.date}
-              onChange={this.onFieldChange}
-              onBlur={this.validateEventDate}
-            />
-          </div>
+          {dateInput}
           <div className="editEventButtonDiv">
             <button type="submit" className="buttonNormal editEventSubmitButton" disabled={buttonDisabled}>Save</button>
             <button className="buttonNormal editEventCancelButton" onClick={this.onCancelClick}>Cancel</button>

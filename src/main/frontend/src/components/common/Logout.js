@@ -9,11 +9,11 @@ class Logout extends React.Component {
     super(props);
 
     this.logout = this.logout.bind(this);
+    this.state = {
+      redirect: ""
+    }
   }
 
-  state = {
-    redirect: ""
-  }
 
   componentDidUpdate() {
     if (this.state.redirect) {

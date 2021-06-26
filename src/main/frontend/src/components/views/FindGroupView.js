@@ -15,17 +15,17 @@ class FindGroupView extends React.Component {
     this.onFocus = this.onFocus.bind(this);
     this.onBlur = this.onBlur.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  state = {
-    name: "",
-    searched: false,
-    loading: false,
-    redirect: "",
-    rules: {
-      name: false
+    this.state = {
+      name: "",
+      searched: false,
+      loading: false,
+      redirect: "",
+      rules: {
+        name: false
+      }
     }
   }
+
 
   handleFetchErrors(response) {
     if (!response.ok) {
@@ -35,13 +35,13 @@ class FindGroupView extends React.Component {
           text: ""
         };
         switch (body.status) {
-        case 401:
-          message.text = body.message;
-          this.props.logout();
-          break;
-        default:
-          message.text = "Something went wrong!";
-          break;
+          case 401:
+            message.text = body.message;
+            this.props.logout();
+            break;
+          default:
+            message.text = "Something went wrong!";
+            break;
         }
         this.setState({ loading: false });
         this.props.setMessage(message);
