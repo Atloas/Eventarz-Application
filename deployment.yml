@@ -18,7 +18,7 @@ spec:
         app: eventarz-application
     spec:
       containers:
-        - image: eventarzregistry.azurecr.io/eventarz-application:latest
+        - image: eventarzcontainerregistry.azurecr.io/eventarz-application:latest
           name: eventarz-application
           resources: {}
 status: {}
