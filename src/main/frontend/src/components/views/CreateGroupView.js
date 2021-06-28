@@ -115,7 +115,7 @@ class CreateGroupView extends React.Component {
 
   validateName() {
     var name = this.state.values.name;
-    var found = name.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
+    var found = name.match(/[^a-zA-Z0-9\s\-:().,!?$&*'"]+/g);
     if (name.length < 5 || found != null) {
       this.setState({ validity: { ...this.state.validity, name: false } });
     }
@@ -125,7 +125,7 @@ class CreateGroupView extends React.Component {
   }
 
   validateDescription() {
-    var found = this.state.values.description.match(/[^a-zA-Z0-9\s\-\:\(\).,!?$&*'"]+/g);
+    var found = this.state.values.description.match(/[^a-zA-Z0-9\s\-:().,!?$&*'"]+/g);
     if (found != null) {
       this.setState({ validity: { ...this.state.validity, description: false } });
     }
