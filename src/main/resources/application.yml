@@ -2,3 +2,7 @@ spring:
   cloud.loadbalancer.ribbon.enabled: false
   application:
     name: "eventarz-application"
+
+eureka:
+  instance:
+    preferIpAddress: true
