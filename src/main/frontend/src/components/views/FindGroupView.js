@@ -66,8 +66,15 @@ class FindGroupView extends React.Component {
   onSubmit(event) {
     event.preventDefault()
 
+    var address = gatewayAddress;
+    if(this.props.currentUser.role === "ROLE_ADMIN") {
+      address += "/admin/groups?name=" + encodeURIComponent(this.state.name);
+    } else {
+      address += "/groups?name=" + encodeURIComponent(this.state.name);
+    }
+
     this.setState({ loading: true, searched: true })
-    fetch(gatewayAddress + "/admin/groups?name=" + encodeURIComponent(this.state.name), {
+    fetch(address, {
       method: "GET",
       headers: {
         'mode': 'cors',
@@ -130,7 +137,8 @@ class FindGroupView extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  foundGroups: state.foundGroups
+  foundGroups: state.foundGroups,
+  currentUser: state.currentUser
 })
 
 const mapDispatchToProps = dispatch => ({
