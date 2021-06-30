@@ -212,7 +212,6 @@ class UserDetailsView extends React.Component {
             :
             null
           }
-          <div className="userLabel">User</div>
           <div className="username">{this.state.user.username}</div>
           <div className="userRegisterDateDiv">
             <div className="userRegisterDateLabel">Registered on </div>
