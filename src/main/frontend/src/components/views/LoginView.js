@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { loginAction, setMessageAction } from '../../redux/actions';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 
 class LoginView extends React.Component {
   constructor(props) {
@@ -53,7 +52,7 @@ class LoginView extends React.Component {
     event.preventDefault()
 
     this.setState({ loading: true });
-    fetch(gatewayAddress + "/login", {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/login", {
       method: "POST",
       headers: {
         'mode': 'cors',

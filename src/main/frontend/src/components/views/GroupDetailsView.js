@@ -8,7 +8,6 @@ import { processGroupData } from "../../scripts/groupDataUtils";
 import GroupEventList from "../event/GroupEventList";
 import Loading from '../common/Loading';
 import GroupMemberList from '../user/GroupMemberList';
-import { gatewayAddress } from "../../consts/addresses";
 import { putHappenedEventsInTheBack } from "../../scripts/eventDataUtils";
 
 class GroupDetailsView extends React.Component {
@@ -57,7 +56,7 @@ class GroupDetailsView extends React.Component {
   }
 
   componentDidMount() {
-    var address = gatewayAddress;
+    var address = process.env.REACT_APP_GATEWAY_ADDRESS;
     if (this.props.currentUser.role === "ROLE_ADMIN") {
       address += "/admin/groups/" + this.props.match.params.uuid;
     } else {
@@ -88,7 +87,7 @@ class GroupDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/groups/" + this.props.groupDetails.uuid + '/members', {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/groups/" + this.props.groupDetails.uuid + '/members', {
       method: 'POST',
       headers: {
         'mode': 'cors',
@@ -115,7 +114,7 @@ class GroupDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/groups/" + this.props.groupDetails.uuid + '/members/' + this.props.currentUser.username, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/groups/" + this.props.groupDetails.uuid + '/members/' + this.props.currentUser.username, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -144,7 +143,7 @@ class GroupDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/groups/" + this.props.groupDetails.uuid, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/groups/" + this.props.groupDetails.uuid, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -164,7 +163,7 @@ class GroupDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/admin/groups/" + this.props.groupDetails.uuid, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/admin/groups/" + this.props.groupDetails.uuid, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',

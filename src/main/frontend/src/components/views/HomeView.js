@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 import { setMessageAction } from '../../redux/actions';
 import EventHomeList from '../event/EventHomeList';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 import { putHappenedEventsInTheBack } from "../../scripts/eventDataUtils";
 
 class HomeView extends React.Component {
@@ -46,7 +45,7 @@ class HomeView extends React.Component {
 
   componentDidMount() {
     if (this.props.currentUser.role === "ROLE_USER") {
-      fetch(gatewayAddress + "/events?username=" + this.props.currentUser.username + "&home", {
+      fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/events?username=" + this.props.currentUser.username + "&home", {
         method: "GET",
         headers: {
           'mode': 'cors',

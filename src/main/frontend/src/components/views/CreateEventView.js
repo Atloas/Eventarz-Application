@@ -5,7 +5,6 @@ import { setMessageAction } from '../../redux/actions';
 import { DateTime } from 'luxon';
 import { eventDateTimeStorageFormat } from '../../consts/dateFormats';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 import is from "is_js";
 
 class CreateEventView extends React.Component {
@@ -83,7 +82,7 @@ class CreateEventView extends React.Component {
   }
 
   componentDidMount() {
-    fetch(gatewayAddress + "/groups?username=" + this.props.currentUser.username, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/groups?username=" + this.props.currentUser.username, {
       headers: {
         'mode': 'cors',
         'Accept': 'application/json',
@@ -165,7 +164,7 @@ class CreateEventView extends React.Component {
     var formattedDate = date.toFormat(eventDateTimeStorageFormat);
 
     this.setState({ loading: true });
-    fetch(gatewayAddress + "/events", {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/events", {
       method: "POST",
       headers: {
         'mode': 'cors',

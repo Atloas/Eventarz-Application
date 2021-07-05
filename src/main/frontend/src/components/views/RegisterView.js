@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { NavLink, Redirect } from "react-router-dom";
 import { setMessageAction } from "../../redux/actions";
 import Loading from "../common/Loading";
-import { gatewayAddress } from "../../consts/addresses";
 
 class RegisterView extends React.Component {
   constructor(props) {
@@ -125,7 +124,7 @@ class RegisterView extends React.Component {
     event.preventDefault()
 
     this.setState({ loading: true });
-    fetch(gatewayAddress + "/register", {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/register", {
       method: "POST",
       headers: {
         'mode': 'cors',

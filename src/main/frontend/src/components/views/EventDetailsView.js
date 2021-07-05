@@ -7,7 +7,6 @@ import { eventDateTimeStorageFormat, eventDateTimeDisplayFormat } from '../../co
 import EventParticipantList from '../user/EventParticipantList';
 import Loading from '../common/Loading';
 import { processEventData } from "../../scripts/eventDataUtils";
-import { gatewayAddress } from "../../consts/addresses";
 
 class EventDetailsView extends React.Component {
   constructor(props) {
@@ -55,7 +54,7 @@ class EventDetailsView extends React.Component {
   }
 
   componentDidMount() {
-    var address = gatewayAddress;
+    var address = process.env.REACT_APP_GATEWAY_ADDRESS;
     if (this.props.currentUser.role === "ROLE_ADMIN") {
       address += "/admin/events/" + this.props.match.params.uuid;
     } else {
@@ -82,7 +81,7 @@ class EventDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/events/" + this.props.eventDetails.uuid + '/participants', {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/events/" + this.props.eventDetails.uuid + '/participants', {
       method: 'POST',
       headers: {
         'mode': 'cors',
@@ -104,7 +103,7 @@ class EventDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/events/" + this.props.eventDetails.uuid + '/participants/' + this.props.currentUser.username, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/events/" + this.props.eventDetails.uuid + '/participants/' + this.props.currentUser.username, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -131,7 +130,7 @@ class EventDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/events/" + this.props.eventDetails.uuid, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/events/" + this.props.eventDetails.uuid, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',
@@ -151,7 +150,7 @@ class EventDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/admin/events/" + this.props.eventDetails.uuid, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/admin/events/" + this.props.eventDetails.uuid, {
       method: 'DELETE',
       headers: {
         'mode': 'cors',

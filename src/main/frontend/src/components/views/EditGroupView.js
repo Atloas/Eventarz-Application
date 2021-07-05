@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setGroupDetailsAction, setMessageAction } from '../../redux/actions';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 
 class EditGroupView extends React.Component {
   constructor(props) {
@@ -82,7 +81,7 @@ class EditGroupView extends React.Component {
     event.preventDefault()
 
     this.setState({ loading: true });
-    fetch(gatewayAddress + "/groups/" + this.props.groupDetails.uuid, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/groups/" + this.props.groupDetails.uuid, {
       method: "PUT",
       headers: {
         'mode': 'cors',

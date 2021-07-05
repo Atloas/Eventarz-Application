@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 import EventHomeList from '../event/EventHomeList';
 import { setMessageAction } from "../../redux/actions";
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 import { putHappenedEventsInTheBack } from "../../scripts/eventDataUtils";
 
 class MyEventsView extends React.Component {
@@ -45,7 +44,7 @@ class MyEventsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch(gatewayAddress + "/events?username=" + this.props.currentUser.username, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/events?username=" + this.props.currentUser.username, {
       method: "GET",
       headers: {
         'mode': 'cors',

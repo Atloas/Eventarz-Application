@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 import { setFoundEventsAction, setMessageAction } from '../../redux/actions';
 import EventList from '../event/EventList';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 
 class FindEventView extends React.Component {
   constructor(props) {
@@ -67,7 +66,7 @@ class FindEventView extends React.Component {
     event.preventDefault()
 
     this.setState({ loading: true, searched: true })
-    fetch(gatewayAddress + "/admin/events?name=" + encodeURIComponent(this.state.name), {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/admin/events?name=" + encodeURIComponent(this.state.name), {
       method: "GET",
       headers: {
         'mode': 'cors',

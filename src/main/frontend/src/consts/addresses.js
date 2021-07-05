@@ -1,1 +1,0 @@
-export const gatewayAddress = process.env.REACT_APP_GATEWAY_ADDRESS;

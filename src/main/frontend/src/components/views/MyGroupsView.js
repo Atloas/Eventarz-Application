@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 import GroupList from '../group/GroupList';
 import { setMessageAction } from '../../redux/actions';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 
 class MyGroupsView extends React.Component {
   constructor(props) {
@@ -44,7 +43,7 @@ class MyGroupsView extends React.Component {
   }
 
   componentDidMount() {
-    fetch(gatewayAddress + "/groups?username=" + this.props.currentUser.username, {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/groups?username=" + this.props.currentUser.username, {
       method: "GET",
       headers: {
         'mode': 'cors',

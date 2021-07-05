@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { setMessageAction } from '../../redux/actions';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 
 class CreateGroupView extends React.Component {
   constructor(props) {
@@ -72,7 +71,7 @@ class CreateGroupView extends React.Component {
     event.preventDefault()
 
     this.setState({ loading: true });
-    fetch(gatewayAddress + "/groups", {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/groups", {
       method: "POST",
       headers: {
         'mode': 'cors',

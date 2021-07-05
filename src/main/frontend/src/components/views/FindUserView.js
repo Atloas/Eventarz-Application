@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 import { logoutAction, setFoundUsersAction, setMessageAction } from '../../redux/actions';
 import EventParticipantList from '../user/EventParticipantList';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 
 class FindUserView extends React.Component {
   constructor(props) {
@@ -67,7 +66,7 @@ class FindUserView extends React.Component {
     event.preventDefault()
 
     this.setState({ loading: true, searched: true })
-    fetch(gatewayAddress + "/admin/users?username=" + encodeURIComponent(this.state.username), {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/admin/users?username=" + encodeURIComponent(this.state.username), {
       method: "GET",
       headers: {
         'mode': 'cors',

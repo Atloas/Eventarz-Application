@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 import { setFoundGroupsAction, setMessageAction } from '../../redux/actions';
 import GroupList from '../group/GroupList';
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 
 class FindGroupView extends React.Component {
   constructor(props) {
@@ -66,7 +65,7 @@ class FindGroupView extends React.Component {
   onSubmit(event) {
     event.preventDefault()
 
-    var address = gatewayAddress;
+    var address = process.env.REACT_APP_GATEWAY_ADDRESS;
     if(this.props.currentUser.role === "ROLE_ADMIN") {
       address += "/admin/groups?name=" + encodeURIComponent(this.state.name);
     } else {

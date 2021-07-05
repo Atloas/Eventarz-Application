@@ -5,7 +5,6 @@ import { setMessageAction } from '../../redux/actions';
 import UserEventList from "../event/UserEventList";
 import UserGroupList from "../group/UserGroupList";
 import Loading from '../common/Loading';
-import { gatewayAddress } from "../../consts/addresses";
 
 class UserDetailsView extends React.Component {
   constructor(props) {
@@ -53,9 +52,9 @@ class UserDetailsView extends React.Component {
   componentDidMount() {
     var uri;
     if (this.props.currentUser.role === "ROLE_ADMIN") {
-      uri = gatewayAddress + "/admin/users/" + this.props.match.params.username
+      uri = process.env.REACT_APP_GATEWAY_ADDRESS + "/admin/users/" + this.props.match.params.username
     } else {
-      uri = gatewayAddress + "/users/" + this.props.match.params.username
+      uri = process.env.REACT_APP_GATEWAY_ADDRESS + "/users/" + this.props.match.params.username
     }
     fetch(uri, {
       headers: {
@@ -76,7 +75,7 @@ class UserDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/admin/users/" + this.state.user.username + '/banned', {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/admin/users/" + this.state.user.username + '/banned', {
       method: 'PUT',
       headers: {
         'mode': 'cors',
@@ -98,7 +97,7 @@ class UserDetailsView extends React.Component {
     event.preventDefault();
 
     this.setState({ reloading: true });
-    fetch(gatewayAddress + "/admin/users/" + this.state.user.username + '/banned', {
+    fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/admin/users/" + this.state.user.username + '/banned', {
       method: 'PUT',
       headers: {
         'mode': 'cors',

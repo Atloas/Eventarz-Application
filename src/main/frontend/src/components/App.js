@@ -21,7 +21,6 @@ import EditGroupView from "./views/EditGroupView";
 import GroupDetailsView from "./views/GroupDetailsView";
 import UserDetailsView from "./views/UserDetailsView";
 import Loading from './common/Loading';
-import { gatewayAddress } from "../consts/addresses";
 
 class App extends React.Component {
 
@@ -43,7 +42,7 @@ class App extends React.Component {
   componentDidMount() {
     if (localStorage.getItem("token")) {
       this.setState({ loading: true })
-      fetch(gatewayAddress + "/refreshLogin", {
+      fetch(process.env.REACT_APP_GATEWAY_ADDRESS + "/refreshLogin", {
         method: "POST",
         headers: {
           'mode': 'cors',
