@@ -6,3 +6,8 @@ spring:
 eureka:
   instance:
     preferIpAddress: true
+
+logging:
+  pattern:
+    #    Simplified logging pattern without PID, thread name and logger name to make it readable on screenshots
+    console: "${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"
